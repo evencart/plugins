@@ -1,0 +1,12 @@
+Payments.Stripe/obj/
+Payments.Stripe/bin/
+Payments.Square/obj/
+Payments.Square/bin/
+Payments.PaypalWithRedirect/obj/
+Payments.PaypalWithRedirect/bin/
+Shipping.FedEx/obj/
+Shipping.Shippo/bin/
+Shipping.Shippo/obj/
+Shipping.UPS/obj/
+Ui.Slider/obj/
+Ui.SearchPlus/obj/

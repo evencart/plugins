@@ -1,0 +1,11 @@
+﻿{
+  "name": "Login with Facebook",
+  "description": "",
+  "version": "1.0",
+  "supportedVersions": [ "1.0"],
+  "assemblyName": "Authentication.Facebook.dll",
+  "systemName": "EvenCart.Authentication.Facebook",
+  "author": "EvenCart.com",
+  "authorUri": "https://www.evencart.com",
+  "pluginUri": ""
+}

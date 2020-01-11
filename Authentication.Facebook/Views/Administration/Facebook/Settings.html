@@ -1,0 +1,35 @@
+﻿{% layout "_PluginLayout" %}
+{% global page_title=@t"Facebook Configuration" active_menu="ConfigureFacebook" menu_group="FacebookConfiguration" %}
+{% partial "Facebook/_Navigation" %}
+<div class="panel">
+    <div class="panel-title">
+        {{"Facebook Configuration" | t}}
+    </div>
+    <div class="panel-body">
+        <form action="{% route api_FacebookSettings %}" method="post" id="form-save-settings">
+            {% control xsrf %}
+            <div class="form-group">
+                {% control label text=@t"Client Id" for="clientId" %}
+                {% control text name="clientId" value="{{settings.clientId}}" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Client Secret" for="clientSecret" %}
+                {% control text name="clientSecret" value="{{settings.clientSecret}}" %}
+            </div>
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save" | t}}</button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            ready(function() {
+                initAjaxForm("form-save-settings",
+                    {
+                        onSuccess: function() {
+                            notify("success", "{{'Settings saved successfully' | t}}");
+                        }
+                    });
+            });
+        </script>
+    </div>
+</div>
+

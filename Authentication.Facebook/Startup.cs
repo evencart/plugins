@@ -16,8 +16,8 @@ namespace Authentication.Facebook
                 .AddFacebook(FacebookConfig.FacebookAuthenticationScheme, options =>
                     {
                         var settings = DependencyResolver.Resolve<FacebookSettings>();
-                        options.AppId = "832147880558350"; // settings.ClientId;
-                        options.AppSecret = "ab6f62461b856dddfa0d2d256ad7ac33"; // settings.ClientSecret;
+                        options.AppId = settings.ClientId;
+                        options.AppSecret = settings.ClientSecret;
                         options.SaveTokens = true;
                         options.Fields.Add("email");
                         options.Fields.Add("birthday");

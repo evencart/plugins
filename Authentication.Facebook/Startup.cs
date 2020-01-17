@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Startup;
+using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -16,14 +17,17 @@ namespace Authentication.Facebook
                 .AddFacebook(FacebookConfig.FacebookAuthenticationScheme, options =>
                     {
                         var settings = DependencyResolver.Resolve<FacebookSettings>();
-                        options.AppId = settings.ClientId;
-                        options.AppSecret = settings.ClientSecret;
+                        var clientId = settings.ClientId.IsNullEmptyOrWhiteSpace() ? "XXXX" : settings.ClientId;
+                        var clientSecret = settings.ClientSecret.IsNullEmptyOrWhiteSpace() ? "XXXX" : settings.ClientSecret;
+                        options.AppId = clientId;
+                        options.AppSecret = clientSecret;
                         options.SaveTokens = true;
                         options.Fields.Add("email");
                         options.Fields.Add("birthday");
                         options.Fields.Add("picture");
                         options.Fields.Add("name");
                         options.SignInScheme = ApplicationConfig.ExternalAuthenticationScheme;
+
                     });
         }
 

@@ -66,7 +66,7 @@ namespace Payments.Square.Helpers
             CustomerId: customerId,
             AmountMoney: new Money()
             {
-                Amount = (long)order.OrderTotal * 100,
+                Amount = (long)(request.Amount ?? order.OrderTotal) * 100,
                 Currency = order.CurrencyCode
             },
             AppFeeMoney: new Money()

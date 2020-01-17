@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Extensions;
@@ -22,8 +23,9 @@ namespace Payments.PaypalWithRedirect.Helpers
             return new LiveEnvironment(settings.ClientId, settings.ClientSecret);
         }
 
-        public static TransactionResult ProcessApproval(Order order, PaypalWithRedirectSettings settings)
+        public static TransactionResult ProcessApproval(TransactionRequest request, PaypalWithRedirectSettings settings)
         {
+            var order = request.Order;
             var payer = new Payer()
             {
                 PaymentMethod = "paypal",
@@ -38,7 +40,7 @@ namespace Payments.PaypalWithRedirect.Helpers
                     {
                         Amount = new Amount()
                         {
-                            Total = order.OrderTotal.ToString("N"),
+                            Total = (request.Amount ?? order.OrderTotal).ToString("N"),
                             Currency = order.CurrencyCode
                         }
                     }
@@ -93,6 +95,7 @@ namespace Payments.PaypalWithRedirect.Helpers
 
         public static TransactionResult ProcessExecution(Order order, PaymentReturnModel returnModel, PaypalWithRedirectSettings settings)
         {
+            var transAmount = order.OrderTotal - order.StoreCreditAmount;
             var payment = new PaymentExecution()
             {
                 PayerId = returnModel.PayerId,
@@ -103,7 +106,7 @@ namespace Payments.PaypalWithRedirect.Helpers
                         Amount = new Amount()
                         {
                             Currency = order.CurrencyCode,
-                            Total = order.OrderTotal.ToString("N")
+                            Total = transAmount.ToString("N")
                         }
                     }
                 }
@@ -122,7 +125,7 @@ namespace Payments.PaypalWithRedirect.Helpers
                 transactionResult.Success = true;
                 transactionResult.NewStatus = result.State == "approved" ? PaymentStatus.Complete : PaymentStatus.OnHold;
                 transactionResult.OrderGuid = order.Guid;
-                transactionResult.TransactionAmount = order.OrderTotal;
+                transactionResult.TransactionAmount = result.Transactions[0].Amount.Total.GetDecimal();
                 transactionResult.TransactionGuid = returnModel.PaymentId;
                 transactionResult.TransactionCurrencyCode = result.Transactions[0].Amount.Currency;
                 transactionResult.ResponseParameters = new Dictionary<string, object>()
@@ -137,11 +140,59 @@ namespace Payments.PaypalWithRedirect.Helpers
                     { "intent", result.Intent },
                     { "state", result.State},
                     { "updateTime", result.UpdateTime },
+                    { "saleId", result.Transactions[0].RelatedResources[0].Sale.Id }
                 };
+                
             }
             catch (BraintreeHttp.HttpException ex)
             {
                 transactionResult.Success = false;
+                transactionResult.Exception = ex;
+            }
+
+            return transactionResult;
+        }
+
+        public static TransactionResult ProcessRefund(TransactionRequest request, PaypalWithRedirectSettings settings)
+        {
+            var order = request.Order;
+
+            var refund = new RefundRequest()
+            {
+                Amount = new Amount()
+                {
+                    Total = (request.Amount ?? order.OrderTotal).ToString("N"),
+                    Currency = order.CurrencyCode
+                },
+                Reason = "Admin Initiated Refund",
+              
+            };
+            var saleRefundRequest = new SaleRefundRequest(request.Parameters["saleId"].ToString());
+            saleRefundRequest.RequestBody(refund);
+            var environment = GetEnvironment(settings);
+
+            var client = new PayPalHttpClient(environment);
+            var transactionResult = new TransactionResult();
+            try
+            {
+                var response = client.Execute(saleRefundRequest).Result;
+                var result = response.Result<DetailedRefund>();
+                transactionResult.Success = true;
+                transactionResult.NewStatus = result.State == "approved" || result.State == "pending" ? PaymentStatus.Refunded : PaymentStatus.OnHold;
+                transactionResult.OrderGuid = order.Guid;
+                transactionResult.TransactionAmount = result.Amount.Total.GetDecimal();
+                transactionResult.ResponseParameters = new Dictionary<string, object>()
+                {
+                    { "id", result.Id },
+                    { "parentPayment", result.ParentPayment },
+                    { "createTime", result.CreateTime },
+                    { "state", result.State},
+                    { "updateTime", result.UpdateTime },
+                };
+
+            }
+            catch (BraintreeHttp.HttpException ex)
+            {
                 transactionResult.Exception = ex;
             }
 

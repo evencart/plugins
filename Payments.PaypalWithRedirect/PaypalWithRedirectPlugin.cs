@@ -24,15 +24,21 @@ namespace Payments.PaypalWithRedirect
         public string PaymentHandlerComponentRouteName => PaypalConfig.PaymentHandlerComponentRouteName;
 
         public PaymentOperation[] SupportedOperations => new[]
-            {PaymentOperation.Authorize, PaymentOperation.Capture, PaymentOperation.Refund, PaymentOperation.Void};
+            {PaymentOperation.Refund};
 
         public bool SupportsSubscriptions { get; } = false;
 
         public TransactionResult ProcessTransaction(TransactionRequest request)
         {
-            var order = request.Order;
-            var transactionResult = PaypalHelper.ProcessApproval(order, _paypalWithRedirectSettings);
-            return transactionResult;
+            switch (request.RequestType)
+            {
+                case TransactionRequestType.Payment:
+                    return PaypalHelper.ProcessApproval(request, _paypalWithRedirectSettings);
+                case TransactionRequestType.Refund:
+                    return PaypalHelper.ProcessRefund(request, _paypalWithRedirectSettings);
+            }
+
+            return null;
         }
 
         public decimal GetPaymentHandlerFee(Cart cart)

@@ -68,7 +68,7 @@ namespace Payments.Stripe.Helpers
 
             var options = new ChargeCreateOptions
             {
-                Amount = (long) (order.OrderTotal) * 100,
+                Amount = (long) (request.Amount ?? order.OrderTotal) * 100,
                 Currency = order.CurrencyCode.ToLower(),
                 Description = stripeSettings.Description,
                 Source = stripeToken.Id,

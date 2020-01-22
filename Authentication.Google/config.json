@@ -1,0 +1,11 @@
+﻿{
+  "name": "Login with Google",
+  "description": "",
+  "version": "1.0",
+  "supportedVersions": [ "1.0"],
+  "assemblyName": "Authentication.Google.dll",
+  "systemName": "EvenCart.Authentication.Google",
+  "author": "EvenCart.com",
+  "authorUri": "https://www.evencart.com",
+  "pluginUri": ""
+}

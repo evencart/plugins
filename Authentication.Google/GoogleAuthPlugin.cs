@@ -1,4 +1,4 @@
-﻿using Authentication.Facebook.Components;
+﻿using Authentication.Google.Components;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
 using EvenCart.Infrastructure;
@@ -6,12 +6,12 @@ using EvenCart.Infrastructure.Plugins;
 using EvenCart.Services.Plugins;
 using EvenCart.Services.Settings;
 
-namespace Authentication.Facebook
+namespace Authentication.Google
 {
-    public class FacebookAuthPlugin : FoundationPlugin
+    public class GoogleAuthPlugin : FoundationPlugin
     {
         private readonly ISettingService _settingService;
-        public FacebookAuthPlugin(ISettingService settingService)
+        public GoogleAuthPlugin(ISettingService settingService)
         {
             _settingService = settingService;
         }
@@ -20,8 +20,8 @@ namespace Authentication.Facebook
         {
             base.Install();
             //install the widget
-            var widgetId = DependencyResolver.Resolve<IPluginAccountant>().AddWidget(LoginButtonWidget.WidgetSystemName, "EvenCart.Authentication.Facebook", "login");
-            _settingService.Save(new FacebookSettings()
+            var widgetId = DependencyResolver.Resolve<IPluginAccountant>().AddWidget(LoginButtonWidget.WidgetSystemName, "EvenCart.Authentication.Google", "login");
+            _settingService.Save(new GoogleSettings()
             {
                 WidgetId = widgetId,
                 ClientId = "xxxx",
@@ -32,11 +32,11 @@ namespace Authentication.Facebook
         public override void Uninstall()
         {
             base.Uninstall();
-            var settings = DependencyResolver.Resolve<FacebookSettings>();
+            var settings = DependencyResolver.Resolve<GoogleSettings>();
             DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<FacebookSettings>();
+            _settingService.DeleteSettings<GoogleSettings>();
         }
 
-        public override string ConfigurationUrl => ApplicationEngine.RouteUrl(FacebookConfig.FacebookSettingsRouteName);
+        public override string ConfigurationUrl => ApplicationEngine.RouteUrl(GoogleConfig.GoogleSettingsRouteName);
     }
 }

@@ -1,0 +1,11 @@
+﻿{
+  "name": "Login with Twitter",
+  "description": "",
+  "version": "1.0",
+  "supportedVersions": [ "1.0"],
+  "assemblyName": "Authentication.Twitter.dll",
+  "systemName": "EvenCart.Authentication.Twitter",
+  "author": "EvenCart.com",
+  "authorUri": "https://www.evencart.com",
+  "pluginUri": ""
+}

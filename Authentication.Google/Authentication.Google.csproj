@@ -6,52 +6,52 @@
     <Configurations>Debug;Release;DebugWithSwagger;ReleaseForDemo</Configurations>
     <Authors>Team Apexol</Authors>
     <Company>Sojatia Infocrafts Private Limited</Company>
-    <Description>Plugin to authenticate via Facebook</Description>
+    <Description>Plugin to authenticate via Google</Description>
     <Copyright>2019 Sojatia Infocrafts Private Limited</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>$(SolutionDir)EvenCart\Plugins\Authentication.Facebook</OutputPath>
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Authentication.Google</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseForDemo|AnyCPU'">
-    <OutputPath>$(SolutionDir)EvenCart\Plugins\Authentication.Facebook</OutputPath>
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Authentication.Google</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutputPath>$(SolutionDir)EvenCart\Plugins\Authentication.Facebook</OutputPath>
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Authentication.Google</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWithSwagger|AnyCPU'">
-    <OutputPath>$(SolutionDir)EvenCart\Plugins\Authentication.Facebook</OutputPath>
+    <OutputPath>$(SolutionDir)EvenCart\Plugins\Authentication.Google</OutputPath>
     <OutDir>$(OutputPath)</OutDir>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="ve-A64C.tmp" />
-    <None Remove="Views\Administration\Facebook\Settings.html" />
-    <None Remove="Views\Administration\Facebook\_Navigation.html" />
+    <None Remove="Views\Administration\Google\Settings.html" />
+    <None Remove="Views\Administration\Google\_Navigation.html" />
     <None Remove="Views\PublicInfo.html" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Views\Administration\Facebook\Settings.html">
+    <Content Include="Views\Administration\Google\Settings.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Administration\Facebook\_Navigation.html">
+    <Content Include="Views\Administration\Google\_Navigation.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Views\Components\FacebookLoginButton\Default.html">
+    <Content Include="Views\Components\GoogleLoginButton\Default.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Facebook" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="2.2.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\EvenCart.Core\EvenCart.Core.csproj">

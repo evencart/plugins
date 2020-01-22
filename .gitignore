@@ -12,3 +12,7 @@ Ui.Slider/obj/
 Ui.SearchPlus/obj/
 Authentication.Facebook/obj/
 Authentication.Facebook/bin/
+Authentication.Twitter/obj/
+Authentication.Twitter/bin/
+Authentication.Google/obj/
+Authentication.Google/bin/

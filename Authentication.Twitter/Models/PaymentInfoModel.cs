@@ -2,7 +2,7 @@
 using EvenCart.Infrastructure.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Authentication.Facebook.Models
+namespace Authentication.Twitter.Models
 {
     public class PaymentInfoModel : FoundationModel
     {

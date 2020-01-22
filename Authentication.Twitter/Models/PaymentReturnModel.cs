@@ -1,4 +1,4 @@
-﻿namespace Authentication.Facebook.Models
+﻿namespace Authentication.Twitter.Models
 {
     public class PaymentReturnModel
     {

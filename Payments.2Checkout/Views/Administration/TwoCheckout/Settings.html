@@ -1,0 +1,49 @@
+﻿{% layout "_PluginLayout" %}
+{% global page_title=@t"TwoCheckout Configuration" active_menu="ConfigureTwoCheckout" menu_group="TwoCheckoutConfiguration" %}
+{% partial "TwoCheckout/_Navigation" %}
+<div class="panel">
+    <div class="panel-title">
+        {{"TwoCheckout Configuration" | t}}
+    </div>
+    <div class="panel-body">
+        <form action="{% route api_TwoCheckoutSettings %}" method="post" id="form-save-settings">
+            {% control xsrf %}
+            <div class="form-group">
+                {% control label text=@t"Seller Id" for="sellerId" %}
+                {% control text name="sellerId" value="{{settings.sellerId}}" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Publishable Key" for="publishableKey" %}
+                {% control text name="publishableKey" value="{{settings.publishableKey}}" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Private Key" for="privateKey" %}
+                {% control text name="privateKey" value="{{settings.privateKey}}" %}
+            </div>
+            <div class="form-group">
+                {% control checkbox name="enableTestMode" text=@t"Enable Test Mode" value="settings.enableTestMode" %}
+            </div>
+            <div class="form-group">
+                {% control checkbox name="usePercentageForAdditionalFee" text=@t"Use percentage for additional fee" value="settings.usePercentageForAdditionalFee" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Additional Fee" for="additionalFee" %}
+                {% control number name="additionalFee" value="{{settings.additionalFee}}" %}
+            </div>
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save" | t}}</button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            ready(function() {
+                initAjaxForm("form-save-settings",
+                    {
+                        onSuccess: function() {
+                            notify("success", "{{'Settings saved successfully' | t}}");
+                        }
+                    });
+            });
+        </script>
+    </div>
+</div>
+

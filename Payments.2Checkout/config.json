@@ -1,0 +1,11 @@
+﻿{
+  "name": "TwoCheckout Payments",
+  "description": "",
+  "version": "1.0",
+  "supportedVersions": [ "1.0"],
+  "assemblyName": "Payments.TwoCheckout.dll",
+  "systemName": "EvenCart.Payments.TwoCheckout",
+  "author": "RoastedBytes.com",
+  "authorUri": "https://www.roastedbytes.com",
+  "pluginUri": ""
+}

@@ -1,0 +1,6 @@
+﻿<p>
+    {{"You'll be required to pay for your order on delivery. " | t}}
+    {% if fee > 0 %}
+    {{"You'll be charged additional fee of " | t}}{{feeString}}.
+    {% endif %}
+</p>

@@ -1,0 +1,34 @@
+﻿{% layout "_PluginLayout" %}
+{% global page_title=@t"CashOnDelivery Configuration" active_menu="ConfigureCashOnDelivery" menu_group="CashOnDeliveryConfiguration" %}
+{% partial "CashOnDelivery/_Navigation" %}
+<div class="panel">
+    <div class="panel-title">
+        {{"CashOnDelivery Configuration" | t}}
+    </div>
+    <div class="panel-body">
+        <form action="{% route api_CashOnDeliverySettings %}" method="post" id="form-save-settings">
+            {% control xsrf %}
+            <div class="form-group">
+                {% control checkbox name="usePercentageForAdditionalFee" text=@t"Use percentage for additional fee" value="settings.usePercentageForAdditionalFee" %}
+            </div>
+            <div class="form-group">
+                {% control label text=@t"Additional Fee" for="additionalFee" %}
+                {% control number name="additionalFee" value="{{settings.additionalFee}}" %}
+            </div>
+            <div class="save-button-container">
+                <button type="submit" class="btn btn-success">{{"Save" | t}}</button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            ready(function() {
+                initAjaxForm("form-save-settings",
+                    {
+                        onSuccess: function() {
+                            notify("success", "{{'Settings saved successfully' | t}}");
+                        }
+                    });
+            });
+        </script>
+    </div>
+</div>
+

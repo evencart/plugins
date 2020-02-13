@@ -66,12 +66,12 @@ namespace Payments.Square.Helpers
             CustomerId: customerId,
             AmountMoney: new Money()
             {
-                Amount = (long)(request.Amount ?? order.OrderTotal) * 100,
+                Amount = (long)((request.Amount ?? order.OrderTotal) * 100),
                 Currency = order.CurrencyCode
             },
             AppFeeMoney: new Money()
             {
-                Amount = 100 * (long?)order.PaymentMethodFee,
+                Amount = (long) (100 * order.PaymentMethodFee),
                 Currency = order.CurrencyCode
             },
             BillingAddress: new Address(billingAddress.Address1, billingAddress.Address2,
@@ -143,7 +143,7 @@ namespace Payments.Square.Helpers
                 IdempotencyKey = Guid.NewGuid().ToString(),
                 AmountMoney = new Money()
                 {
-                    Amount = (refundRequest.IsPartialRefund ? (long?)refundRequest.Amount : (long)order.OrderTotal) * 100
+                    Amount = (long)((refundRequest.IsPartialRefund ?refundRequest.Amount : order.OrderTotal) * 100)
                 },
                 PaymentId = paymentId,
                 Reason = "Refunded by administrator " + ApplicationEngine.CurrentUser.Name

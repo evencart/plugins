@@ -40,7 +40,7 @@ namespace Shipping.UPS
             return true;
         }
 
-        public IList<ShippingOption> GetAvailableOptions(IList<Product> products, Address shipperInfo, Address receiverInfo)
+        public IList<ShippingOption> GetAvailableOptions(IList<(Product, int)> products, Address shipperInfo, Address receiverInfo)
         {
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             var url = _upsSettings.DebugMode ? DEVELOPMENT_RATES_URL : PRODUCTION_RATES_URL;
@@ -74,7 +74,7 @@ namespace Shipping.UPS
             ApplicationEngine.RouteUrl(UPSProviderConfig.UPSProviderSettingsRouteName);
 
         #region Private 
-        private byte[] BuildRatesRequestMessage(IList<Product> products, Address shipperInfo, Address receiverInfo)
+        private byte[] BuildRatesRequestMessage(IList<(Product, int)> products, Address shipperInfo, Address receiverInfo)
         {
             Encoding utf8 = new UTF8Encoding(false);
             var writer = new XmlTextWriter(new MemoryStream(2000), utf8);
@@ -137,7 +137,7 @@ namespace Shipping.UPS
            
             for (var i = 0; i < products.Count; i++)
             {
-                var product = products[i];
+                var product = products[i].Item1;
                 writer.WriteStartElement("Package");
                 writer.WriteStartElement("PackagingType");
                 writer.WriteElementString("Code", UPSHelper.GetPackagingTypeCode(PackagingType.Package));

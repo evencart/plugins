@@ -32,7 +32,7 @@ namespace Shipping.Shippo
         {
             APIResource resource = new APIResource(API_KEY);
 
-            var products = cart.CartItems.Select(x => x.Product).ToList();
+            var products = cart.CartItems.Select(x => (x.Product, x.Quantity)).ToList();
             var shipperInfo = cart.BillingAddress;
             var receiverInfo = cart.ShippingAddress;
 
@@ -52,7 +52,7 @@ namespace Shipping.Shippo
             return true;
         }
 
-        public IList<ShippingOption> GetAvailableOptions(IList<Product> products, Address shipperInfo, Address receiverInfo)
+        public IList<ShippingOption> GetAvailableOptions(IList<(Product, int)> products, Address shipperInfo, Address receiverInfo)
         {
             var shippingOptions = new List<ShippingOption>();
 
@@ -82,7 +82,7 @@ namespace Shipping.Shippo
             ApplicationEngine.RouteUrl(ProviderConfig.ShippoProviderSettingsRouteName);
 
         #region Private 
-        private Hashtable CreateShipmentConfig(IList<Product> products, Address shipperInfo, Address receiverInfo)
+        private Hashtable CreateShipmentConfig(IList<(Product, int)> products, Address shipperInfo, Address receiverInfo)
         {
             Hashtable toAddressTable = new Hashtable();
             toAddressTable.Add("name", shipperInfo.Name);
@@ -109,8 +109,9 @@ namespace Shipping.Shippo
 
             // parcel
             List<Hashtable> parcels = new List<Hashtable>();
-            foreach (var product in products)
+            foreach (var productTuple in products)
             {
+                var product = productTuple.Item1;
                 Hashtable parcelTable = new Hashtable();
 
                 parcelTable.Add("name", product.Name);

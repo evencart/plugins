@@ -10,8 +10,8 @@ namespace Shipping.Shippo.Controllers.Administration
     public class ShippoController : FoundationPluginAdminController
     {
         private readonly ISettingService _settingService;
-        private readonly Settings _ShippoSettings;
-        public ShippoController(ISettingService settingService, Settings ShippoSettings)
+        private readonly ShippoSettings _ShippoSettings;
+        public ShippoController(ISettingService settingService, ShippoSettings ShippoSettings)
         {
             _settingService = settingService;
             _ShippoSettings = ShippoSettings;
@@ -25,6 +25,7 @@ namespace Shipping.Shippo.Controllers.Administration
                 LiveApiKey = _ShippoSettings.LiveApiKey,
                 TestApiKey = _ShippoSettings.TestApiKey,
                 DebugMode = _ShippoSettings.DebugMode,
+                UseSinglePackageShipment = _ShippoSettings.UseSinglePackageShipment,
             };
             return R.Success.With("settings", ShippoModel).Result;
         }
@@ -36,6 +37,7 @@ namespace Shipping.Shippo.Controllers.Administration
             _ShippoSettings.DebugMode = model.DebugMode;
             _ShippoSettings.LiveApiKey = model.LiveApiKey;
             _ShippoSettings.TestApiKey = model.TestApiKey;
+            _ShippoSettings.UseSinglePackageShipment = model.UseSinglePackageShipment;
             _settingService.Save(_ShippoSettings);
             return R.Success.Result;
         }

@@ -70,6 +70,13 @@ namespace Shipping.UPS
             return null;
         }
 
+        public ShipmentInfo GetShipmentInfo(ShippingOption selectedShippingOption, IList<(Product, int)> products)
+        {
+            return null;
+        }
+
+        public bool SupportsLabelPurchase { get; } = false;
+
         public override string ConfigurationUrl =>
             ApplicationEngine.RouteUrl(UPSProviderConfig.UPSProviderSettingsRouteName);
 

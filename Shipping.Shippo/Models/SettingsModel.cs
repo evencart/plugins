@@ -1,6 +1,5 @@
 ﻿using EvenCart.Infrastructure.Mvc.Models;
 using EvenCart.Infrastructure.Mvc.Validator;
-using FluentValidation;
 
 namespace Shipping.Shippo.Models
 {
@@ -11,6 +10,8 @@ namespace Shipping.Shippo.Models
         public string LiveApiKey { get; set; }
 
         public string TestApiKey { get; set; }
+
+        public bool UseSinglePackageShipment { get; set; }
 
         public void SetupValidationRules(ModelValidator<SettingsModel> v)
         {

@@ -7,6 +7,7 @@ using System.Text;
 using System.Web;
 using Newtonsoft.Json;
 using Shippo.Models;
+using EvenCart.Core.Exception;
 
 namespace Shippo
 {
@@ -106,20 +107,9 @@ namespace Shippo
                     result = GetResponseAsString(resp);
                 }
             }
-            catch (WebException wexc)
+            catch (Exception exc)
             {
-                if (wexc.Response != null)
-                {
-                    string json_error = GetResponseAsString(wexc.Response);
-                    HttpStatusCode status_code = HttpStatusCode.BadRequest;
-                    HttpWebResponse resp = wexc.Response as HttpWebResponse;
-                    if (resp != null)
-                        status_code = resp.StatusCode;
-
-                    if ((int)status_code <= 500)
-                        throw new ShippoException(json_error, wexc);
-                }
-                throw;
+                throw new EvenCartException(exc.Message);
             }
             return result;
         }

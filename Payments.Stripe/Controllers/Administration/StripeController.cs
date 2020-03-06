@@ -29,7 +29,8 @@ namespace Payments.Stripe.Controllers.Administration
                 EnableTestMode = _stripeSettings.EnableTestMode,
                 PublishableKey = _stripeSettings.PublishableKey,
                 SecretKey = _stripeSettings.SecretKey,
-                UsePercentageForAdditionalFee = _stripeSettings.UsePercentageForAdditionalFee
+                UsePercentageForAdditionalFee = _stripeSettings.UsePercentageForAdditionalFee,
+                UseRedirectionFlow = _stripeSettings.UseRedirectionFlow
             };
             return R.Success.With("settings", settingsModel).Result;
         }
@@ -47,7 +48,8 @@ namespace Payments.Stripe.Controllers.Administration
             _stripeSettings.PublishableKey = settingsModel.PublishableKey;
             _stripeSettings.SecretKey = settingsModel.SecretKey;
             _stripeSettings.UsePercentageForAdditionalFee = settingsModel.UsePercentageForAdditionalFee;
-            _settingService.Save(_stripeSettings);
+            _stripeSettings.UseRedirectionFlow = settingsModel.UseRedirectionFlow;
+            _settingService.Save(_stripeSettings, CurrentStore.Id);
             return R.Success.Result;
         }
     }

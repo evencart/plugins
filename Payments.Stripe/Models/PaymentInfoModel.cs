@@ -18,5 +18,7 @@ namespace Payments.Stripe.Models
         public int Month { get; set; }
 
         public int Year { get; set; }
+
+        public bool RedirectionEnabled { get; set; }
     }
 }

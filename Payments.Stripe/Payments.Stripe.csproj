@@ -30,6 +30,7 @@
     <None Remove="Views\Administration\Stripe\Settings.html" />
     <None Remove="Views\Administration\Stripe\_Navigation.html" />
     <None Remove="Views\PublicInfo.html" />
+    <None Remove="Views\Stripe\RedirectToStripe.html" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +40,10 @@
     <Content Include="Views\Administration\Stripe\_Navigation.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Views\Stripe\RedirectToStripe.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Pack>$(IncludeRazorContentInPack)</Pack>
+    </Content>
     <Content Include="Views\Stripe\PaymentInfoDisplayPage.html">
       <Pack>$(IncludeRazorContentInPack)</Pack>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -46,7 +51,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Stripe.net" Version="34.3.0" />
+    <PackageReference Include="Stripe.net" Version="35.3.0" />
   </ItemGroup>
 
 

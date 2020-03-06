@@ -24,6 +24,8 @@ namespace Payments.Stripe.Models
 
         public string Description { get; set; }
 
+        public bool UseRedirectionFlow { get; set; }
+
         public void SetupValidationRules(ModelValidator<SettingsModel> v)
         {
             v.RuleFor(x => x.PublishableKey).NotEmpty();

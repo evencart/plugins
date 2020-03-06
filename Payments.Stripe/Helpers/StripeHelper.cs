@@ -9,14 +9,20 @@ using EvenCart.Data.Entity.Shop;
 using EvenCart.Data.Entity.Users;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
+using EvenCart.Infrastructure;
+using EvenCart.Services.Cultures;
 using EvenCart.Services.Extensions;
 using EvenCart.Services.Logger;
 using EvenCart.Services.Payments;
+using EvenCart.Services.Products;
 using EvenCart.Services.Purchases;
 using EvenCart.Services.Serializers;
 using Microsoft.AspNetCore.Http;
 using Stripe;
+using Stripe.Checkout;
 using Address = EvenCart.Data.Entity.Addresses.Address;
+using Order = EvenCart.Data.Entity.Purchases.Order;
+using ProductService = Stripe.ProductService;
 
 namespace Payments.Stripe.Helpers
 {
@@ -33,6 +39,14 @@ namespace Payments.Stripe.Helpers
                 ? stripeSettings.TestSecretKey
                 : stripeSettings.SecretKey;
             StripeConfiguration.ApiKey = !secret ? publishableKey : secretKey;
+        }
+
+        public static string GetPublishableKey(StripeSettings stripeSettings)
+        {
+            var publishableKey = stripeSettings.EnableTestMode
+                ? stripeSettings.TestPublishableKey
+                : stripeSettings.PublishableKey;
+            return publishableKey;
         }
         public static TransactionResult ProcessPayment(TransactionRequest request, StripeSettings stripeSettings, ILogger logger)
         {
@@ -64,12 +78,12 @@ namespace Payments.Stripe.Helpers
             //get token for card
             var tokenService = new TokenService();
             var stripeToken = tokenService.Create(tokenCreateOptions);
-           
 
+            GetFinalAmountDetails(request.Amount ?? order.OrderTotal, order.CurrencyCode, address, out var currencyCode, out var finalAmount);
             var options = new ChargeCreateOptions
             {
-                Amount = (long) (request.Amount ?? order.OrderTotal) * 100,
-                Currency = order.CurrencyCode.ToLower(),
+                Amount = (long)(finalAmount) * 100,
+                Currency = currencyCode,
                 Description = stripeSettings.Description,
                 Source = stripeToken.Id,
                 Capture = !stripeSettings.AuthorizeOnly,
@@ -77,7 +91,7 @@ namespace Payments.Stripe.Helpers
             };
             InitStripe(stripeSettings, true);
             var service = new ChargeService();
-            
+
             var charge = service.Create(options);
             var processPaymentResult = new TransactionResult()
             {
@@ -115,10 +129,13 @@ namespace Payments.Stripe.Helpers
         {
             InitStripe(stripeSettings, true);
             var refundService = new RefundService();
+            var order = refundRequest.Order;
+            var address = order.BillingAddressSerialized.To<Address>();
+            GetFinalAmountDetails(refundRequest.Amount ?? refundRequest.Order.OrderTotal, refundRequest.Order.CurrencyCode, address, out _, out var amount);
             var refundOptions = new RefundCreateOptions
             {
                 Charge = refundRequest.GetParameterAs<string>("chargeId"),
-                Amount = 100 * (long)(refundRequest.Amount ?? refundRequest.Order.OrderTotal),
+                Amount = 100 * (long)(amount),
             };
             var refund = refundService.Create(refundOptions);
             var refundResult = new TransactionResult()
@@ -228,6 +245,7 @@ namespace Payments.Stripe.Helpers
             var productService = new ProductService();
             var planService = new PlanService();
 
+          
             foreach (var orderItem in order.OrderItems)
             {
                 var product = productService.Create(new ProductCreateOptions
@@ -235,15 +253,16 @@ namespace Payments.Stripe.Helpers
                     Name = orderItem.Product.Name,
                     Type = "service"
                 });
-
+                var lineTotal = orderItem.Price * orderItem.Quantity + orderItem.Tax;
+                GetFinalAmountDetails(lineTotal, order.CurrencyCode, address, out var currencyCode, out var finalAmount);
                 var planOptions = new PlanCreateOptions()
                 {
                     Nickname = product.Name,
                     Product = product.Id,
-                    Amount = (long)(order.OrderTotal) * 100,
+                    Amount = (long)(finalAmount),
                     Interval = GetInterval(orderItem.Product.SubscriptionCycle),
                     IntervalCount = orderItem.Product.CycleCount == 0 ? 1 : orderItem.Product.CycleCount,
-                    Currency = order.CurrencyCode,
+                    Currency = currencyCode,
                     UsageType = "licensed",
                     TrialPeriodDays = orderItem.Product.TrialDays
                 };
@@ -254,17 +273,20 @@ namespace Payments.Stripe.Helpers
                     Quantity = orderItem.Quantity
                 });
             }
-
+            //create a coupon if any
+            var coupon = GetCoupon(order);
             var subscriptionOptions = new SubscriptionCreateOptions()
             {
                 Customer = customerId,
                 Items = subscriptionItems,
                 Metadata = new Dictionary<string, string>()
                 {
-                    { "email", order.User.Email },
                     { "orderGuid", order.Guid },
-                    { "internalId", order.Id.ToString() }
+                    { "internalId", order.Id.ToString() },
+                    { "isSubscription", bool.TrueString }
                 },
+                Coupon = coupon?.Id,
+                
 #if DEBUG
                 TrialEnd = DateTime.UtcNow.AddMinutes(5)
 #endif
@@ -332,6 +354,102 @@ namespace Payments.Stripe.Helpers
                 return stopResult;
             }
         }
+
+        public static TransactionResult CreateSessionRedirect(TransactionRequest request, StripeSettings stripeSettings,
+           ILogger logger, bool isSubscription)
+        {
+            var order = request.Order;
+            InitStripe(stripeSettings);
+
+            var address = DependencyResolver.Resolve<IDataSerializer>()
+                .DeserializeAs<Address>(order.BillingAddressSerialized);
+
+            InitStripe(stripeSettings, true);
+            //do we have a saved stripe customer id?
+            var customerId = GetCustomerId(order.User, null, address);
+
+            var subscriptionItems = new List<SessionSubscriptionDataItemOptions>();
+            var productService = new ProductService();
+            var planService = new PlanService();
+            
+            foreach (var orderItem in order.OrderItems)
+            {
+                var product = productService.Create(new ProductCreateOptions
+                {
+                    Name = orderItem.Product.Name,
+                    Type = "service"
+                });
+                var lineTotal = orderItem.Price * orderItem.Quantity + orderItem.Tax;
+                GetFinalAmountDetails(lineTotal, order.CurrencyCode, address, out var currencyCode, out var finalAmount);
+                var planOptions = new PlanCreateOptions()
+                {
+                    Nickname = product.Name,
+                    Product = product.Id,
+                    Amount = (long)finalAmount,
+                    Interval = GetInterval(orderItem.Product.SubscriptionCycle),
+                    IntervalCount = orderItem.Product.CycleCount == 0 ? 1 : orderItem.Product.CycleCount,
+                    Currency = currencyCode,
+                    UsageType = "licensed",
+                    TrialPeriodDays = orderItem.Product.TrialDays
+                };
+                var plan = planService.Create(planOptions);
+                subscriptionItems.Add(new SessionSubscriptionDataItemOptions()
+                {
+                    Plan = plan.Id,
+                    Quantity = orderItem.Quantity
+                });
+            }
+            var options = new SessionCreateOptions
+            {
+                Customer = customerId,
+                PaymentMethodTypes = new List<string> {
+                    "card",
+                },
+                SubscriptionData = new SessionSubscriptionDataOptions
+                {
+                    Items = subscriptionItems,
+                    Metadata = new Dictionary<string, string>()
+                    {
+                        { "orderGuid", order.Guid },
+                        { "internalId", order.Id.ToString() },
+                        { "isSubscription", isSubscription.ToString() }
+                    }
+                },
+                SuccessUrl = ApplicationEngine.RouteUrl(StripeConfig.StripeReturnUrlRouteName, new { orderGuid = order.Guid }, true),
+                CancelUrl = ApplicationEngine.RouteUrl(StripeConfig.StripeCancelUrlRouteName, new { orderGuid = order.Guid }, true),
+                Mode = isSubscription ? "subscription" : "payment",
+            };
+            var service = new SessionService();
+            var session = service.Create(options);
+            var processPaymentResult = new TransactionResult()
+            {
+                OrderGuid = order.Guid,
+            };
+
+            if (session != null && !session.Id.IsNullEmptyOrWhiteSpace())
+            {
+                processPaymentResult.NewStatus = PaymentStatus.Processing;
+                processPaymentResult.TransactionCurrencyCode = order.CurrencyCode;
+                processPaymentResult.IsSubscription = true;
+                processPaymentResult.TransactionAmount = order.OrderTotal;
+                processPaymentResult.ResponseParameters = new Dictionary<string, object>()
+                {
+                    {"sessionId", session.Id},
+                    {"paymentIntentId", session.PaymentIntentId}
+                };
+                processPaymentResult.Success = true;
+                processPaymentResult.Redirect(ApplicationEngine.RouteUrl(StripeConfig.StripeRedirectToUrlRouteName,
+                    new { orderGuid = order.Guid, sessionId = session.Id }));
+            }
+            else
+            {
+                processPaymentResult.Success = false;
+                logger.Log<TransactionResult>(LogLevel.Warning, $"The session for Order#{order.Id} by stripe redirect failed." + session?.StripeResponse.Content);
+            }
+
+            return processPaymentResult;
+        }
+
         public static async void ParseWebhookResponse(HttpRequest responseRequest)
         {
             var json = await new StreamReader(responseRequest.Body).ReadToEndAsync();
@@ -362,13 +480,18 @@ namespace Payments.Stripe.Helpers
                     string invoiceId = obj.Id;
                     //for some reason, meta data is served from line items
                     Dictionary<string, string> metaData = obj.Lines.Data[0].Metadata;
-                    Plan plan = obj.Lines.Data[0].Plan;
                     decimal total = obj.Lines.Data[0].Plan.Amount;
+                    var currency = obj.Lines.Data[0].Currency;
                     //extract order info
                     if (!metaData.TryGetValue("internalId", out var internalIdStr))
                     {
                         return;
                     }
+
+                    metaData.TryGetValue("isSubscription", out var isSubscriptionStr);
+                    var isSubscription = !isSubscriptionStr.IsNullEmptyOrWhiteSpace() &&
+                                         isSubscriptionStr == bool.TrueString;
+
                     var orderId = int.Parse(internalIdStr);
                     var orderService = DependencyResolver.Resolve<IOrderService>();
                     var order = orderService.Get(orderId);
@@ -381,12 +504,12 @@ namespace Payments.Stripe.Helpers
                         OrderGuid = order.Guid,
                         Order = order,
                         Success = true,
-                        IsSubscription = true,
+                        IsSubscription = isSubscription,
                         NewStatus = PaymentStatus.Failed,
                         TransactionAmount = total / 100,
                         TransactionGuid = Guid.NewGuid().ToString(),
                         IsOfflineTransaction = false,
-                        TransactionCurrencyCode = order.CurrencyCode,
+                        TransactionCurrencyCode = currency,
                         ResponseParameters = new Dictionary<string, object>()
                         {
                             { "invoiceId", invoiceId }
@@ -399,8 +522,8 @@ namespace Payments.Stripe.Helpers
                     string invoiceId = obj.Id;
                     //for some reason, meta data is served from line items
                     Dictionary<string, string> metaData = obj.Lines.Data[0].Metadata;
-                    Plan plan = obj.Lines.Data[0].Plan;
                     decimal total = obj.Lines.Data[0].Plan.Amount;
+                    var currency = obj.Lines.Data[0].Currency;
                     //extract order info
                     if (!metaData.TryGetValue("internalId", out var internalIdStr))
                     {
@@ -428,7 +551,7 @@ namespace Payments.Stripe.Helpers
                         TransactionAmount = total / 100,
                         TransactionGuid = Guid.NewGuid().ToString(),
                         IsOfflineTransaction = false,
-                        TransactionCurrencyCode = order.CurrencyCode,
+                        TransactionCurrencyCode = currency,
                         ResponseParameters = new Dictionary<string, object>()
                         {
                             { "invoiceId", invoiceId }
@@ -442,7 +565,7 @@ namespace Payments.Stripe.Helpers
 
             }
         }
-
+        #region Helpers
         private static string GetInterval(TimeCycle cycle)
         {
             switch (cycle)
@@ -493,7 +616,54 @@ namespace Payments.Stripe.Helpers
             }
             var customer = service.Create(options);
             customerId = customer.Id;
+            //save for future use
+            user.SetPropertyValue(StripeCustomerIdKey, customerId);
             return customerId;
         }
+
+        private static void GetFinalAmountDetails(decimal inAmount, string inCurrencyCode, Address address, out string currencyCode, out decimal amount)
+        {
+            var priceAccountant = DependencyResolver.Resolve<IPriceAccountant>();
+            amount = inAmount;
+            currencyCode = inCurrencyCode.ToLower();
+            //if target country in India, send converted amount
+            if (address.Country.Code == "IN")
+            {
+                var indianCurrency = DependencyResolver.Resolve<ICurrencyService>()
+                    .FirstOrDefault(x => x.IsoCode == "INR");
+                if (indianCurrency == null)
+                    return;
+                amount = 100 * priceAccountant.ConvertCurrency(amount, indianCurrency);
+                currencyCode = indianCurrency.IsoCode.ToLower();
+                return;
+            }
+
+            amount = 100 * amount;
+        }
+
+        private static Coupon GetCoupon(Order order)
+        {
+            Coupon coupon = null;
+            if (order.DiscountId.HasValue && order.Discount > 0)
+            {
+                var couponCode = order.DiscountCoupon;
+                if (couponCode.IsNullEmptyOrWhiteSpace())
+                {
+                    couponCode = "COUPON_" + order.DiscountId;
+                }
+                //create a coupon
+                var options = new CouponCreateOptions
+                {
+                    Duration = "once",
+                    Id = couponCode,
+                    AmountOff = (long)order.Discount
+                };
+                var service = new CouponService();
+                coupon = service.Create(options);
+            }
+
+            return coupon;
+        }
+        #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
@@ -16,11 +17,9 @@ namespace Payments.Stripe
 {
     public class StripePlugin : FoundationPlugin, IPaymentHandlerPlugin
     {
-        private readonly StripeSettings _stripeSettings;
         private readonly ILogger _logger;
-        public StripePlugin(StripeSettings stripeSettings, ILogger logger)
+        public StripePlugin(ILogger logger)
         {
-            _stripeSettings = stripeSettings;
             _logger = logger;
         }
 
@@ -35,38 +34,54 @@ namespace Payments.Stripe
 
         public TransactionResult ProcessTransaction(TransactionRequest request)
         {
+            var stripeSettings = DependencyResolver.Resolve<StripeSettings>();
             if (request.RequestType == TransactionRequestType.Payment)
-                return StripeHelper.ProcessPayment(request, _stripeSettings, _logger);
+            {
+                if (stripeSettings.UseRedirectionFlow)
+                {
+                    return StripeHelper.CreateSessionRedirect(request, stripeSettings, _logger, false);
+                }
+                return StripeHelper.ProcessPayment(request, stripeSettings, _logger);
+            }
             if (request.RequestType == TransactionRequestType.Refund)
-                return StripeHelper.ProcessRefund(request, _stripeSettings, _logger);
+                return StripeHelper.ProcessRefund(request, stripeSettings, _logger);
             if (request.RequestType == TransactionRequestType.Void)
-                return StripeHelper.ProcessVoid(request, _stripeSettings, _logger);
+                return StripeHelper.ProcessVoid(request, stripeSettings, _logger);
             if (request.RequestType == TransactionRequestType.Capture)
-                return StripeHelper.ProcessCapture(request, _stripeSettings, _logger);
-            if(request.RequestType == TransactionRequestType.SubscriptionCreate)
-                return StripeHelper.CreateSubscription(request, _stripeSettings, _logger);
+                return StripeHelper.ProcessCapture(request, stripeSettings, _logger);
+            if (request.RequestType == TransactionRequestType.SubscriptionCreate)
+            {
+                if (stripeSettings.UseRedirectionFlow)
+                    return StripeHelper.CreateSessionRedirect(request, stripeSettings, _logger, true);
+                return StripeHelper.CreateSubscription(request, stripeSettings, _logger);
+            }
             if (request.RequestType == TransactionRequestType.SubscriptionCancel)
-                return StripeHelper.StopSubscription(request, _stripeSettings, _logger);
+                return StripeHelper.StopSubscription(request, stripeSettings, _logger);
             return null;
         }
 
         public decimal GetPaymentHandlerFee(Cart cart)
         {
-            return _stripeSettings.UsePercentageForAdditionalFee
-                ? _stripeSettings.AdditionalFee * cart.FinalAmount / 100
-                : _stripeSettings.AdditionalFee;
+            var stripeSettings = DependencyResolver.Resolve<StripeSettings>();
+            return stripeSettings.UsePercentageForAdditionalFee
+                ? stripeSettings.AdditionalFee * cart.FinalAmount / 100
+                : stripeSettings.AdditionalFee;
         }
 
         public decimal GetPaymentHandlerFee(Order order)
         {
-            return _stripeSettings.UsePercentageForAdditionalFee
-                ? _stripeSettings.AdditionalFee * order.OrderTotal / 100
-                : _stripeSettings.AdditionalFee;
+            var stripeSettings = DependencyResolver.Resolve<StripeSettings>();
+            return stripeSettings.UsePercentageForAdditionalFee
+                ? stripeSettings.AdditionalFee * order.OrderTotal / 100
+                : stripeSettings.AdditionalFee;
         }
 
         public bool ValidatePaymentInfo(Dictionary<string, string> parameters, out string error)
         {
+            var stripeSettings = DependencyResolver.Resolve<StripeSettings>();
             error = null;
+            if (stripeSettings.UseRedirectionFlow)
+                return true; //we don't collect anything on our site in case of redirection flow
             parameters.TryGetValue("cardNumber", out var cardNumber);
             parameters.TryGetValue("cardName", out var cardName);
             parameters.TryGetValue("expireMonth", out var expireMonthStr);
@@ -102,7 +117,7 @@ namespace Payments.Stripe
                 error = LocalizationHelper.Localize("The card expiry is incorrect or card has expired");
                 return false;
             }
-          
+
             return true;
         }
 

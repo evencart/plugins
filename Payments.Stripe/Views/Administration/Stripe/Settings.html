@@ -41,6 +41,9 @@
                 {% control label text=@t"Description" for="description" %}
                 {% control text name="description" value="{{settings.description}}" %}
             </div>
+            <div class="form-group">
+                {% control checkbox name="useRedirectionFlow" text=@t"Use Redirection Flow" value="settings.useRedirectionFlow" %}
+            </div>
             <div class="save-button-container">
                 <button type="submit" class="btn btn-success">{{"Save" | t}}</button>
             </div>

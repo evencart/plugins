@@ -1,0 +1,17 @@
+﻿{% layout "_RootLayout" %}
+<div class="col-4 offset-4" style="position: fixed;top: 40%;">
+    <div class="alert alert-info">
+        <i class="fas fa-sync fa-spin"></i>  Redirecting you to Stripe...
+    </div>
+</div>
+<script src="https://js.stripe.com/v3/"></script>
+<script type="text/javascript">
+    ready(function() {
+        var stripe = Stripe('{{redirectInfo.publishableKey}}');
+        stripe.redirectToCheckout({
+            sessionId: '{{redirectInfo.sessionId}}'
+        }).then(function (result) {
+            window.location.href = "{{redirectInfo.cancelUrl}}";
+        });
+    });
+</script>

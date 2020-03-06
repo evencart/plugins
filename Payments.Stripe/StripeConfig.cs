@@ -8,7 +8,7 @@
 
         public const string StripeCancelUrlRouteName = "StripeCancelUrl";
 
-        public const string StripeIpnHandlerRouteName = "StripeIpnHandler";
+        public const string StripeRedirectToUrlRouteName = "StripeRedirectToUrl";
 
         public const string StripeSettingsRouteName = "StripeSettings";
 

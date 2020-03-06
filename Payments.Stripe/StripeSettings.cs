@@ -21,5 +21,7 @@ namespace Payments.Stripe
         public decimal AdditionalFee { get; set; }
 
         public string Description { get; set; }
+
+        public bool UseRedirectionFlow { get; set; }
     }
 }

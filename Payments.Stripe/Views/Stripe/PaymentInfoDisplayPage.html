@@ -1,4 +1,9 @@
 ﻿<div class="col-lg-12">
+    {% if paymentInfo.redirectionEnabled %}
+    <p>
+        {{"You'll be redirected to Stripe to complete the payment" | t}}
+    </p>
+    {% else %}
     <div class="form-group">
         {% control label text=@t"Card Number" for="name" %}
         {% control text id="cardNumber" name="cardNumber" %}
@@ -17,13 +22,14 @@
             </div>
             <div class="col-md-4">
                 {% control label text=@t"Expiration Year" for="expireYear" %}
-                {% control select id="expireYear" name="expireYear" items="paymentInfo.availableYears"  %}
+                {% control select id="expireYear" name="expireYear" items="paymentInfo.availableYears" %}
             </div>
             <div class="col-md-4">
                 {% control label text=@t"CVC/CVV" for="cvv" %}
-                {% control number id="cvv" name="cvv"  %}
+                {% control number id="cvv" name="cvv" %}
                 {% control validator for="cvv" required="true" %}
             </div>
         </div>
     </div>
+    {% endif %}
 </div>

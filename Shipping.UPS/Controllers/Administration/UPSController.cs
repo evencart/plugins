@@ -60,7 +60,7 @@ namespace Shipping.UPS.Controllers.Administration
             _upsSettings.Password = model.Password;
             _upsSettings.ShipperNumber = model.ShipperNumber;
             _upsSettings.LicenseNumber = model.LicenseNumber;
-            _settingService.Save(_upsSettings);
+            _settingService.Save(_upsSettings, CurrentStore.Id);
             return R.Success.Result;
         }
     }

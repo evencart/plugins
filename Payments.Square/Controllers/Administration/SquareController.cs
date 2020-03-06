@@ -50,7 +50,7 @@ namespace Payments.Square.Controllers.Administration
             _squareSettings.AccessToken = settingsModel.AccessToken;
             _squareSettings.LocationId = settingsModel.LocationId;
             _squareSettings.UsePercentageForAdditionalFee = settingsModel.UsePercentageForAdditionalFee;
-            _settingService.Save(_squareSettings);
+            _settingService.Save(_squareSettings, CurrentStore.Id);
             //reset settings
             SquareHelper.InitSquare(_squareSettings);
             return R.Success.Result;

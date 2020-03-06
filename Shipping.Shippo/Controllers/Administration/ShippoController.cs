@@ -38,7 +38,7 @@ namespace Shipping.Shippo.Controllers.Administration
             _ShippoSettings.LiveApiKey = model.LiveApiKey;
             _ShippoSettings.TestApiKey = model.TestApiKey;
             _ShippoSettings.UseSinglePackageShipment = model.UseSinglePackageShipment;
-            _settingService.Save(_ShippoSettings);
+            _settingService.Save(_ShippoSettings, CurrentStore.Id);
             return R.Success.Result;
         }
     }

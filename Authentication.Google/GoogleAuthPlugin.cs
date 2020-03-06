@@ -25,7 +25,7 @@ namespace Authentication.Google
                 WidgetId = widgetId,
                 ClientId = "xxxx",
                 ClientSecret = "xxxx"
-            });
+            }, ApplicationEngine.CurrentStore.Id);
         }
 
         public override void Uninstall()
@@ -33,7 +33,7 @@ namespace Authentication.Google
             base.Uninstall();
             var settings = DependencyResolver.Resolve<GoogleSettings>();
             DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<GoogleSettings>();
+            _settingService.DeleteSettings<GoogleSettings>(ApplicationEngine.CurrentStore.Id);
         }
 
         public override string ConfigurationUrl => ApplicationEngine.RouteUrl(GoogleConfig.GoogleSettingsRouteName);

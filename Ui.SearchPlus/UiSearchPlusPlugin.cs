@@ -42,7 +42,7 @@ namespace Ui.SearchPlus
                 SearchBoxId = DefaultSearchBoxId,
                 NumberOfAutoCompleteResults = 10,
                 ShowTermCategory = false
-            });
+            }, ApplicationEngine.CurrentStore.Id);
         }
 
         public override void Uninstall()
@@ -50,7 +50,7 @@ namespace Ui.SearchPlus
             base.Uninstall();
             var settings = DependencyResolver.Resolve<SearchPlusSettings>();
             DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<SearchPlusSettings>();
+            _settingService.DeleteSettings<SearchPlusSettings>(ApplicationEngine.CurrentStore.Id);
         }
     }
 }

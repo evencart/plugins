@@ -25,7 +25,7 @@ namespace Authentication.Twitter
                 WidgetId = widgetId,
                 ClientId = "xxxx",
                 ClientSecret = "xxxx"
-            });
+            }, ApplicationEngine.CurrentStore.Id);
         }
 
         public override void Uninstall()
@@ -33,7 +33,7 @@ namespace Authentication.Twitter
             base.Uninstall();
             var settings = DependencyResolver.Resolve<TwitterSettings>();
             DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<TwitterSettings>();
+            _settingService.DeleteSettings<TwitterSettings>(ApplicationEngine.CurrentStore.Id);
         }
 
         public override string ConfigurationUrl => ApplicationEngine.RouteUrl(TwitterConfig.TwitterSettingsRouteName);

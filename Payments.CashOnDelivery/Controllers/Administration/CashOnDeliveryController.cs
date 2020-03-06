@@ -33,7 +33,7 @@ namespace Payments.CashOnDelivery.Controllers.Administration
         {
             _cashOnDeliverySettings.AdditionalFee = settingsModel.AdditionalFee;
             _cashOnDeliverySettings.UsePercentageForAdditionalFee = settingsModel.UsePercentageForAdditionalFee;
-            _settingService.Save(_cashOnDeliverySettings);
+            _settingService.Save(_cashOnDeliverySettings, CurrentStore.Id);
             return R.Success.Result;
         }
     }

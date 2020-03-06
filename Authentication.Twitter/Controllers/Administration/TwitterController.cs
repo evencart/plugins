@@ -33,7 +33,7 @@ namespace Authentication.Twitter.Controllers.Administration
         {
             _twitterSettings.ClientId = settingsModel.ClientId;
             _twitterSettings.ClientSecret = settingsModel.ClientSecret;
-            _settingService.Save(_twitterSettings);
+            _settingService.Save(_twitterSettings, CurrentStore.Id);
             return R.Success.Result;
         }
     }

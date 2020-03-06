@@ -25,7 +25,7 @@ namespace Authentication.Facebook
                 WidgetId = widgetId,
                 ClientId = "xxxx",
                 ClientSecret = "xxxx"
-            });
+            }, ApplicationEngine.CurrentStore.Id);
         }
 
         public override void Uninstall()
@@ -33,7 +33,7 @@ namespace Authentication.Facebook
             base.Uninstall();
             var settings = DependencyResolver.Resolve<FacebookSettings>();
             DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<FacebookSettings>();
+            _settingService.DeleteSettings<FacebookSettings>(ApplicationEngine.CurrentStore.Id);
         }
 
         public override string ConfigurationUrl => ApplicationEngine.RouteUrl(FacebookConfig.FacebookSettingsRouteName);

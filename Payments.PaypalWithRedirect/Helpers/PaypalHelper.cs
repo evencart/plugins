@@ -223,7 +223,7 @@ namespace Payments.PaypalWithRedirect.Helpers
                 var id = result.Id;
                 paypalSettings.CheckoutProfileId = id;
                 var settingService = DependencyResolver.Resolve<ISettingService>();
-                settingService.Save(paypalSettings);
+                settingService.Save(paypalSettings, ApplicationEngine.CurrentStore.Id);
                 return id;
             }
             catch (BraintreeHttp.HttpException ex)

@@ -36,7 +36,7 @@ namespace Ui.Slider
             _settingService.Save(new UiSliderSettings()
             {
                 WidgetId = widgetId
-            });
+            }, ApplicationEngine.CurrentStore.Id);
         }
 
         public override void Uninstall()
@@ -44,7 +44,7 @@ namespace Ui.Slider
             base.Uninstall();
             var settings = DependencyResolver.Resolve<UiSliderSettings>();
             DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<UiSliderSettings>();
+            _settingService.DeleteSettings<UiSliderSettings>(ApplicationEngine.CurrentStore.Id);
         }
     }
 }

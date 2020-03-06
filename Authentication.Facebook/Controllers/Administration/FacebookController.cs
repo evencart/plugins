@@ -33,7 +33,7 @@ namespace Authentication.Facebook.Controllers.Administration
         {
             _facebookSettings.ClientId = settingsModel.ClientId;
             _facebookSettings.ClientSecret = settingsModel.ClientSecret;
-            _settingService.Save(_facebookSettings);
+            _settingService.Save(_facebookSettings, CurrentStore.Id);
             return R.Success.Result;
         }
     }

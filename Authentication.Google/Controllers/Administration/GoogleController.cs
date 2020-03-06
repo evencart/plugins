@@ -33,7 +33,7 @@ namespace Authentication.Google.Controllers.Administration
         {
             _googleSettings.ClientId = settingsModel.ClientId;
             _googleSettings.ClientSecret = settingsModel.ClientSecret;
-            _settingService.Save(_googleSettings);
+            _settingService.Save(_googleSettings, CurrentStore.Id);
             return R.Success.Result;
         }
     }

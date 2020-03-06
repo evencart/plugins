@@ -35,7 +35,7 @@ namespace Payments.PaypalWithRedirect.Controllers.Administration
             _paypalWithRedirectSettings.ClientId = settingsModel.ClientId;
             _paypalWithRedirectSettings.ClientSecret = settingsModel.ClientSecret;
             _paypalWithRedirectSettings.EnableSandbox = settingsModel.EnableSandbox;
-            _settingService.Save(_paypalWithRedirectSettings);
+            _settingService.Save(_paypalWithRedirectSettings, CurrentStore.Id);
             return R.Success.Result;
         }
     }

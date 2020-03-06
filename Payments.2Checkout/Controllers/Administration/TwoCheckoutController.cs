@@ -43,7 +43,7 @@ namespace Payments.TwoCheckout.Controllers.Administration
             _twoCheckoutSettings.PrivateKey = settingsModel.PrivateKey;
             _twoCheckoutSettings.PublishableKey = settingsModel.PublishableKey;
             _twoCheckoutSettings.UsePercentageForAdditionalFee = settingsModel.UsePercentageForAdditionalFee;
-            _settingService.Save(_twoCheckoutSettings);
+            _settingService.Save(_twoCheckoutSettings, CurrentStore.Id);
             return R.Success.Result;
         }
     }

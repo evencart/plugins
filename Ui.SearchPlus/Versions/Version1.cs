@@ -1,6 +1,5 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using EvenCart.Data.Entity.MediaEntities;
 using Ui.SearchPlus.Data;
 using Db = DotEntity.DotEntity.Database;
 namespace Ui.SearchPlus.Versions

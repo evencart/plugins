@@ -1,14 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using EvenCart.Services.Payments;
-using EvenCart.Services.Purchases;
+﻿using System.Threading.Tasks;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Routing;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Authentication.Facebook.Helpers;
-using Authentication.Facebook.Models;
 using EvenCart.Core;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure;

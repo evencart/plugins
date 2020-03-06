@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DotEntity.Enumerations;
 using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Routing;

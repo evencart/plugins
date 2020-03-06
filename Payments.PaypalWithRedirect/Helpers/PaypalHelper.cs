@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Extensions;

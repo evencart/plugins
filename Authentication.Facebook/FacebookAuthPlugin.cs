@@ -3,7 +3,6 @@ using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Plugins;
 using EvenCart.Infrastructure;
 using EvenCart.Infrastructure.Plugins;
-using EvenCart.Services.Plugins;
 using EvenCart.Services.Settings;
 
 namespace Authentication.Facebook

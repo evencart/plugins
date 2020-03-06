@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using EvenCart.Core.Infrastructure;
+﻿using EvenCart.Core.Infrastructure;
 using EvenCart.Core.Startup;
 using EvenCart.Infrastructure;
 using Microsoft.AspNetCore.Builder;

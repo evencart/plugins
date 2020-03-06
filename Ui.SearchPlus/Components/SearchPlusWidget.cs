@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using EvenCart.Core.Plugins;
 using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ui.SearchPlus.Components

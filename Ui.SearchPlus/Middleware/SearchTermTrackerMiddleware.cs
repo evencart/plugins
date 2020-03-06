@@ -1,8 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Routing;
 using Microsoft.AspNetCore.Http;
 using Ui.SearchPlus.Data;
 using Ui.SearchPlus.Services;

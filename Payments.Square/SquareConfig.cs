@@ -1,5 +1,4 @@
 ﻿using EvenCart.Core;
-using EvenCart.Infrastructure;
 
 namespace Payments.Square
 {

@@ -1,0 +1,53 @@
+﻿{% layout "_PluginLayout" %}
+{% global page_title=@t"Forum Settings" active_menu="UserForumInfo" parent_active_menu="UsersList" menu_group="UserEdit" %}
+
+<form action='{% route api_AdminSaveUserForumInfo userId="{{userId}}" %}' id="form-user-info">
+    {% control xsrf %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel">
+                <div class="panel-title">
+                    {{"User Forum Settings" | t}}
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                {% control label text=@t"Signature" for="signature" %}
+                                {% control textarea id="signature" name="signature" value="{{userInfo.signature}}" %}
+                            </div>
+                            <div class="form-group">
+                                {% control label text=@t"User Status" for="status" %}
+                                {% for status in availableStatus %}
+                                <div>
+                                    <label>
+                                        <input type="checkbox" name="userStatus[]" value="{{status.value}}" {% if status.selected %}checked{% endif %}/>
+                                        {{status.text}}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="save-button-container">
+                    {% control hidden name="userId" value="{{userId}}" %}
+                    <button type="submit" class="btn btn-sm btn-success">{{"Save Info" | t}}</button>
+                    <a class="btn btn-default" href="{% route UsersList %}">{{"Cancel" | t}}</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</form>
+<script type="text/javascript">
+    ready(function() {
+        initAjaxForm("form-user-info",
+            {
+                onSuccess: function() {
+                    notify("success", '{{"Successfully saved forum-info" | t}}');
+                }
+            });
+    })
+</script>
+

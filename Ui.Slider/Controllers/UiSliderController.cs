@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using EvenCart.Core.Data;
 using EvenCart.Core.Services;
-using EvenCart.Services.Serializers;
 using EvenCart.Infrastructure.MediaServices;
 using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.ModelFactories;

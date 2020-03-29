@@ -1,5 +1,4 @@
 ﻿using System;
-using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Enum;
 using EvenCart.Data.Extensions;
 using EvenCart.Infrastructure;
@@ -7,7 +6,6 @@ using EvenCart.Infrastructure.Mvc;
 using EvenCart.Infrastructure.Mvc.Attributes;
 using EvenCart.Infrastructure.Routing;
 using EvenCart.Services.Logger;
-using EvenCart.Services.Payments;
 using EvenCart.Services.Purchases;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;

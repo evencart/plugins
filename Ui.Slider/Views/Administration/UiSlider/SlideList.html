@@ -150,7 +150,7 @@
     ready(function() {
         initFileUploader({
             element: "imageFile",
-            url: "{% route api_UploadMedia %}",
+            url: "{% route api_Admin.UploadMedia %}",
             done: function(e, data) {
                 var result = data.result;
                 var media = result.media;

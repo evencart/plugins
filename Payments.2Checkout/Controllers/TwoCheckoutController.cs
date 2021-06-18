@@ -1,6 +1,6 @@
 ﻿using System;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Payments.TwoCheckout.Models;
@@ -9,7 +9,7 @@ namespace Payments.TwoCheckout.Controllers
 {
     [Route("twoCheckout")]
     [PluginType(PluginType = typeof(TwoCheckoutPlugin))]
-    public class TwoCheckoutController : FoundationPluginController
+    public class TwoCheckoutController : GenesisPluginController
     {
         private readonly TwoCheckoutSettings _twoCheckoutSettings;
 

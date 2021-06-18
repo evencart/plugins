@@ -1,13 +1,12 @@
 ﻿using Authentication.Facebook.Components;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Plugins;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Plugins;
-using EvenCart.Services.Settings;
+using Genesis;
+using Genesis.Modules.Pluggable;
+using Genesis.Modules.Settings;
+using Genesis.Plugins;
 
 namespace Authentication.Facebook
 {
-    public class FacebookAuthPlugin : FoundationPlugin
+    public class FacebookAuthPlugin : GenesisPlugin
     {
         private readonly ISettingService _settingService;
         public FacebookAuthPlugin(ISettingService settingService)
@@ -19,23 +18,23 @@ namespace Authentication.Facebook
         {
             base.Install();
             //install the widget
-            var widgetId = DependencyResolver.Resolve<IPluginAccountant>().AddWidget(LoginButtonWidget.WidgetSystemName, "EvenCart.Authentication.Facebook", "login");
+            var widgetId = D.Resolve<IPluginAccountant>().AddWidget(LoginButtonWidget.WidgetSystemName, "EvenCart.Authentication.Facebook", "login");
             _settingService.Save(new FacebookSettings()
             {
                 WidgetId = widgetId,
                 ClientId = "xxxx",
                 ClientSecret = "xxxx"
-            }, ApplicationEngine.CurrentStore.Id);
+            }, GenesisEngine.Instance.CurrentStore.Id);
         }
 
         public override void Uninstall()
         {
             base.Uninstall();
-            var settings = DependencyResolver.Resolve<FacebookSettings>();
-            DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<FacebookSettings>(ApplicationEngine.CurrentStore.Id);
+            var settings = D.Resolve<FacebookSettings>();
+            D.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
+            _settingService.DeleteSettings<FacebookSettings>(GenesisEngine.Instance.CurrentStore.Id);
         }
 
-        public override string ConfigurationUrl => ApplicationEngine.RouteUrl(FacebookConfig.FacebookSettingsRouteName);
+        public override string ConfigurationUrl => GenesisEngine.Instance.RouteUrl(FacebookConfig.FacebookSettingsRouteName);
     }
 }

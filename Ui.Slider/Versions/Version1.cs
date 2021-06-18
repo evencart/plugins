@@ -1,6 +1,6 @@
 ﻿using DotEntity;
 using DotEntity.Versioning;
-using EvenCart.Data.Entity.MediaEntities;
+using Genesis.Modules.MediaServices;
 using Ui.Slider.Data;
 using Db = DotEntity.DotEntity.Database;
 namespace Ui.Slider.Versions

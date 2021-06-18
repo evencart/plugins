@@ -1,13 +1,12 @@
 ﻿using Authentication.Twitter.Components;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Plugins;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Plugins;
-using EvenCart.Services.Settings;
+using Genesis;
+using Genesis.Modules.Pluggable;
+using Genesis.Modules.Settings;
+using Genesis.Plugins;
 
 namespace Authentication.Twitter
 {
-    public class TwitterAuthPlugin : FoundationPlugin
+    public class TwitterAuthPlugin : GenesisPlugin
     {
         private readonly ISettingService _settingService;
         public TwitterAuthPlugin(ISettingService settingService)
@@ -19,23 +18,23 @@ namespace Authentication.Twitter
         {
             base.Install();
             //install the widget
-            var widgetId = DependencyResolver.Resolve<IPluginAccountant>().AddWidget(LoginButtonWidget.WidgetSystemName, "EvenCart.Authentication.Twitter", "login");
+            var widgetId = D.Resolve<IPluginAccountant>().AddWidget(LoginButtonWidget.WidgetSystemName, "EvenCart.Authentication.Twitter", "login");
             _settingService.Save(new TwitterSettings()
             {
                 WidgetId = widgetId,
                 ClientId = "xxxx",
                 ClientSecret = "xxxx"
-            }, ApplicationEngine.CurrentStore.Id);
+            }, GenesisEngine.Instance.CurrentStore.Id);
         }
 
         public override void Uninstall()
         {
             base.Uninstall();
-            var settings = DependencyResolver.Resolve<TwitterSettings>();
-            DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<TwitterSettings>(ApplicationEngine.CurrentStore.Id);
+            var settings = D.Resolve<TwitterSettings>();
+            D.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
+            _settingService.DeleteSettings<TwitterSettings>(GenesisEngine.Instance.CurrentStore.Id);
         }
 
-        public override string ConfigurationUrl => ApplicationEngine.RouteUrl(TwitterConfig.TwitterSettingsRouteName);
+        public override string ConfigurationUrl => GenesisEngine.Instance.RouteUrl(TwitterConfig.TwitterSettingsRouteName);
     }
 }

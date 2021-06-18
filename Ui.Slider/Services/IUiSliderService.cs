@@ -1,9 +1,9 @@
-﻿using EvenCart.Core.Services;
+﻿using Genesis.Services;
 using Ui.Slider.Data;
 
 namespace Ui.Slider.Services
 {
-    public interface IUiSliderService : IFoundationEntityService<UiSlider>
+    public interface IUiSliderService : IGenesisEntityService<UiSlider>
     {
         
     }

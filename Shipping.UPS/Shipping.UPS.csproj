@@ -39,7 +39,9 @@
     <None Remove="Views\Administration\UPS\Settings.html" />
     <None Remove="Views\Administration\UPS\_Navigation.html" />
   </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\EvenCart.Genesis\EvenCart.Genesis.csproj" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -50,21 +52,6 @@
     <Content Include="Views\Administration\UPS\_Navigation.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\EvenCart.Core\EvenCart.Core.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\EvenCart.Data\EvenCart.Data.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\EvenCart.Infrastructure\EvenCart.Infrastructure.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\EvenCart.Services\EvenCart.Services.csproj">
-      <Private>false</Private>
-    </ProjectReference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

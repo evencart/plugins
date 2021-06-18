@@ -1,14 +1,14 @@
 ﻿using System.Globalization;
-using EvenCart.Infrastructure.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Payments.CashOnDelivery.Controllers
 {
     [Route("cash-on-delivery")]
     [PluginType(PluginType = typeof(CashOnDeliveryPlugin))]
-    public class CashOnDeliveryController : FoundationPluginController
+    public class CashOnDeliveryController : GenesisPluginController
     {
         private readonly CashOnDeliverySettings _cashOnDeliverySettings;
         public CashOnDeliveryController(CashOnDeliverySettings cashOnDeliverySettings)

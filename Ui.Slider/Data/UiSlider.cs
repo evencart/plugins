@@ -1,9 +1,9 @@
-﻿using EvenCart.Core.Data;
-using EvenCart.Data.Entity.MediaEntities;
+﻿using Genesis.Data;
+using Genesis.Modules.MediaServices;
 
 namespace Ui.Slider.Data
 {
-    public class UiSlider : FoundationEntity
+    public class UiSlider : GenesisEntity
     {
         public string Title { get; set; }
 

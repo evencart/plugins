@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Plugins;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
-using EvenCart.Infrastructure;
+using Genesis;
+using Genesis.Plugins;
 using Payments.PaypalWithRedirect.Helpers;
 
 namespace Payments.PaypalWithRedirect
 {
-    public class PaypalWithRedirectPlugin : FoundationPlugin, IPaymentHandlerPlugin
+    public class PaypalWithRedirectPlugin : GenesisPlugin, IPaymentHandlerPlugin
     {
         private readonly PaypalWithRedirectSettings _paypalWithRedirectSettings;
         public PaypalWithRedirectPlugin(PaypalWithRedirectSettings paypalWithRedirectSettings)
@@ -59,7 +59,7 @@ namespace Payments.PaypalWithRedirect
         }
 
         public override string ConfigurationUrl =>
-            ApplicationEngine.RouteUrl(PaypalConfig.PaypalWithRedirectSettingsRouteName);
+            GenesisEngine.Instance.RouteUrl(PaypalConfig.PaypalWithRedirectSettingsRouteName);
 
         #region Helpers
         private static bool Mod10Check(string creditCardNumber)

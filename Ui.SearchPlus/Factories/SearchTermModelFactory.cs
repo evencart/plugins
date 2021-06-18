@@ -1,8 +1,8 @@
 ﻿using System.Linq;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Routing;
+using Genesis;
+using Genesis.MediaServices;
+using Genesis.Routing;
 using Ui.SearchPlus.Data;
 
 namespace Ui.SearchPlus.Factories
@@ -21,7 +21,7 @@ namespace Ui.SearchPlus.Factories
             return new AutoCompleteResultModel()
             {
                 Name = product.Name,
-                Url = ApplicationEngine.RouteUrl(RouteNames.SingleProduct,
+                Url = GenesisEngine.Instance.RouteUrl(RouteNames.SingleProduct,
                     new {SeName = product.SeoMeta.Slug, Id = product.Id}),
                 ThumbnailUrl = _mediaAccountant.GetPictureUrl(product.MediaItems?.FirstOrDefault(),
                     returnDefaultIfNotFound: true)
@@ -33,7 +33,7 @@ namespace Ui.SearchPlus.Factories
             return new AutoCompleteResultModel()
             {
                 Name = searchTerm.Term,
-                Url = ApplicationEngine.RouteUrl(RouteNames.ProductsSearchPage,
+                Url = GenesisEngine.Instance.RouteUrl(RouteNames.ProductsSearchPage,
                     new { search = searchTerm.Term })
             };
         }

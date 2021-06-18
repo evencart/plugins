@@ -1,26 +1,25 @@
-﻿using System;
+﻿
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using EvenCart;
-using EvenCart.Core.Data;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Payments;
-using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Entity.Users;
-using EvenCart.Data.Enum;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Services.Cultures;
 using EvenCart.Services.Extensions;
-using EvenCart.Services.Logger;
+using EvenCart.Services.Orders;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Products;
-using EvenCart.Services.Purchases;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Modules.Data;
+using Genesis.Modules.Localization;
+using Genesis.Modules.Logging;
+using Genesis.Modules.Meta;
+using Genesis.Modules.Users;
 using Microsoft.AspNetCore.Http;
 using Stripe;
 using Stripe.Checkout;
-using Address = EvenCart.Data.Entity.Addresses.Address;
+using Address = Genesis.Modules.Addresses.Address;
 using Order = EvenCart.Data.Entity.Purchases.Order;
 using ProductService = Stripe.ProductService;
 
@@ -235,7 +234,7 @@ namespace Payments.Stripe.Helpers
                 Type = "card"
             });
 
-            var address = DependencyResolver.Resolve<IDataSerializer>()
+            var address = D.Resolve<IDataSerializer>()
                 .DeserializeAs<Address>(order.BillingAddressSerialized);
 
             InitStripe(stripeSettings, true);
@@ -361,7 +360,7 @@ namespace Payments.Stripe.Helpers
             var order = request.Order;
             InitStripe(stripeSettings);
 
-            var address = DependencyResolver.Resolve<IDataSerializer>()
+            var address = D.Resolve<IDataSerializer>()
                 .DeserializeAs<Address>(order.BillingAddressSerialized);
 
             InitStripe(stripeSettings, true);
@@ -415,8 +414,8 @@ namespace Payments.Stripe.Helpers
                         { "isSubscription", isSubscription.ToString() }
                     }
                 },
-                SuccessUrl = ApplicationEngine.RouteUrl(StripeConfig.StripeReturnUrlRouteName, new { orderGuid = order.Guid }, true),
-                CancelUrl = ApplicationEngine.RouteUrl(StripeConfig.StripeCancelUrlRouteName, new { orderGuid = order.Guid }, true),
+                SuccessUrl = GenesisEngine.Instance.RouteUrl(StripeConfig.StripeReturnUrlRouteName, new { orderGuid = order.Guid }, true),
+                CancelUrl = GenesisEngine.Instance.RouteUrl(StripeConfig.StripeCancelUrlRouteName, new { orderGuid = order.Guid }, true),
                 Mode = isSubscription ? "subscription" : "payment",
             };
             var service = new SessionService();
@@ -438,7 +437,7 @@ namespace Payments.Stripe.Helpers
                     {"paymentIntentId", session.PaymentIntentId}
                 };
                 processPaymentResult.Success = true;
-                processPaymentResult.Redirect(ApplicationEngine.RouteUrl(StripeConfig.StripeRedirectToUrlRouteName,
+                processPaymentResult.Redirect(GenesisEngine.Instance.RouteUrl(StripeConfig.StripeRedirectToUrlRouteName,
                     new { orderGuid = order.Guid, sessionId = session.Id }));
             }
             else
@@ -493,12 +492,12 @@ namespace Payments.Stripe.Helpers
                                          isSubscriptionStr == bool.TrueString;
 
                     var orderId = int.Parse(internalIdStr);
-                    var orderService = DependencyResolver.Resolve<IOrderService>();
+                    var orderService = D.Resolve<IOrderService>();
                     var order = orderService.Get(orderId);
                     if (order == null)
                         return; //was order deleted from db directly. don't do anything. todo: btw should we log this
 
-                    var paymentAccountant = DependencyResolver.Resolve<IPaymentAccountant>();
+                    var paymentAccountant = D.Resolve<IPaymentAccountant>();
                     paymentAccountant.ProcessTransactionResult(new TransactionResult()
                     {
                         OrderGuid = order.Guid,
@@ -530,17 +529,17 @@ namespace Payments.Stripe.Helpers
                         return;
                     }
                     var orderId = int.Parse(internalIdStr);
-                    var orderService = DependencyResolver.Resolve<IOrderService>();
+                    var orderService = D.Resolve<IOrderService>();
                     var order = orderService.Get(orderId);
                     if (order == null)
                         return; //was order deleted from db directly. don't do anything. todo: btw should we log this
-                    var paymentTransactionService = DependencyResolver.Resolve<IPaymentTransactionService>();
+                    var paymentTransactionService = D.Resolve<IPaymentTransactionService>();
                     //get saved transactions
                     var savedTransactions = paymentTransactionService.Get(x => x.OrderGuid == order.Guid && x.PaymentStatus == PaymentStatus.Complete).ToList();
                     if (savedTransactions.Any(x => x.TransactionCodes.ContainsKey("invoiceId") && x.TransactionCodes["invoiceId"].ToString() == invoiceId))
                         return; //already have this invoice, so skip it
 
-                    var paymentAccountant = DependencyResolver.Resolve<IPaymentAccountant>();
+                    var paymentAccountant = D.Resolve<IPaymentAccountant>();
                     paymentAccountant.ProcessTransactionResult(new TransactionResult()
                     {
                         OrderGuid = order.Guid,
@@ -583,7 +582,7 @@ namespace Payments.Stripe.Helpers
             }
         }
 
-        private static string GetCustomerId(User user, PaymentMethod paymentMethod, Address address)
+        private static string GetCustomerId(User user, PaymentMethod paymentMethod, Genesis.Modules.Addresses.Address address)
         {
             var customerId = user.GetPropertyValueAs<string>(StripeCustomerIdKey);
             if (!customerId.IsNullEmptyOrWhiteSpace())
@@ -621,15 +620,15 @@ namespace Payments.Stripe.Helpers
             return customerId;
         }
 
-        private static void GetFinalAmountDetails(decimal inAmount, string inCurrencyCode, Address address, out string currencyCode, out decimal amount)
+        private static void GetFinalAmountDetails(decimal inAmount, string inCurrencyCode, Genesis.Modules.Addresses.Address address, out string currencyCode, out decimal amount)
         {
-            var priceAccountant = DependencyResolver.Resolve<IPriceAccountant>();
+            var priceAccountant = D.Resolve<IPriceAccountant>();
             amount = inAmount;
             currencyCode = inCurrencyCode.ToLower();
             //if target country in India, send converted amount
             if (address.Country.Code == "IN")
             {
-                var indianCurrency = DependencyResolver.Resolve<ICurrencyService>()
+                var indianCurrency = D.Resolve<ICurrencyService>()
                     .FirstOrDefault(x => x.IsoCode == "INR");
                 if (indianCurrency == null)
                     return;

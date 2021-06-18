@@ -1,10 +1,10 @@
 ﻿using DryIoc;
-using EvenCart.Core.Infrastructure;
+using Genesis.Infrastructure.DependencyManager;
 using Ui.Slider.Services;
 
 namespace Ui.Slider
 {
-    public class DependencyContainer : IDependencyContainer
+    public class DependencyContainer : IPluginDependencyContainer
     {
         public void RegisterDependencies(IRegistrator registrar)
         {

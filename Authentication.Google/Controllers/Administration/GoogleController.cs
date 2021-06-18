@@ -1,13 +1,13 @@
-﻿using EvenCart.Services.Settings;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Authentication.Google.Models;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 
 namespace Authentication.Google.Controllers.Administration
 {
-    public class GoogleController : FoundationPluginAdminController
+    public class GoogleController : GenesisPluginAdminController
     {
         private readonly GoogleSettings _googleSettings;
         private readonly ISettingService _settingService;

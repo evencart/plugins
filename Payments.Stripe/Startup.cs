@@ -1,5 +1,5 @@
-﻿using EvenCart.Core.Startup;
-using EvenCart.Infrastructure;
+﻿using Genesis;
+using Genesis.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,7 +16,7 @@ namespace Payments.Stripe
         public void Configure(IApplicationBuilder app)
         {
             //ignore the webhook url from antiforgery validation
-            ApplicationConfig.IgnoreAntiforgeryValidation("/stripe/webhook");
+            GenesisEngine.Instance.IgnoreAntiforgeryValidation("/stripe/webhook");
         }
 
         public int Priority { get; }

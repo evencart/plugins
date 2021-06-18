@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Core.Plugins;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Mvc;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Plugins;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Ui.SearchPlus.Components
 {
     [ViewComponent(Name = WidgetSystemName)]
-    public class SearchPlusWidget : FoundationComponent, IWidget
+    public class SearchPlusWidget : GenesisComponent, IWidget
     {
         private readonly SearchPlusSettings _searchPlusSettings;
 

@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Plugins;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Extensions;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Services.Helpers;
-using EvenCart.Services.Logger;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Modules.Data;
+using Genesis.Modules.Localization;
+using Genesis.Modules.Logging;
+using Genesis.Plugins;
 using Payments.Stripe.Helpers;
 
 namespace Payments.Stripe
 {
-    public class StripePlugin : FoundationPlugin, IPaymentHandlerPlugin
+    public class StripePlugin : GenesisPlugin, IPaymentHandlerPlugin
     {
         private readonly ILogger _logger;
         public StripePlugin(ILogger logger)
@@ -34,7 +33,7 @@ namespace Payments.Stripe
 
         public TransactionResult ProcessTransaction(TransactionRequest request)
         {
-            var stripeSettings = DependencyResolver.Resolve<StripeSettings>();
+            var stripeSettings = D.Resolve<StripeSettings>();
             if (request.RequestType == TransactionRequestType.Payment)
             {
                 if (stripeSettings.UseRedirectionFlow)
@@ -62,7 +61,7 @@ namespace Payments.Stripe
 
         public decimal GetPaymentHandlerFee(Cart cart)
         {
-            var stripeSettings = DependencyResolver.Resolve<StripeSettings>();
+            var stripeSettings = D.Resolve<StripeSettings>();
             return stripeSettings.UsePercentageForAdditionalFee
                 ? stripeSettings.AdditionalFee * cart.FinalAmount / 100
                 : stripeSettings.AdditionalFee;
@@ -70,7 +69,7 @@ namespace Payments.Stripe
 
         public decimal GetPaymentHandlerFee(Order order)
         {
-            var stripeSettings = DependencyResolver.Resolve<StripeSettings>();
+            var stripeSettings = D.Resolve<StripeSettings>();
             return stripeSettings.UsePercentageForAdditionalFee
                 ? stripeSettings.AdditionalFee * order.OrderTotal / 100
                 : stripeSettings.AdditionalFee;
@@ -78,7 +77,7 @@ namespace Payments.Stripe
 
         public bool ValidatePaymentInfo(Dictionary<string, string> parameters, out string error)
         {
-            var stripeSettings = DependencyResolver.Resolve<StripeSettings>();
+            var stripeSettings = D.Resolve<StripeSettings>();
             error = null;
             if (stripeSettings.UseRedirectionFlow)
                 return true; //we don't collect anything on our site in case of redirection flow
@@ -122,7 +121,7 @@ namespace Payments.Stripe
         }
 
         public override string ConfigurationUrl =>
-            ApplicationEngine.RouteUrl(StripeConfig.StripeSettingsRouteName);
+            GenesisEngine.Instance.RouteUrl(StripeConfig.StripeSettingsRouteName);
 
         #region Helpers
         private static bool ExpiryCheck(string month, string year)

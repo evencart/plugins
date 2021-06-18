@@ -5,9 +5,10 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Web;
+using EvenCart.Genesis.Exceptions;
 using Newtonsoft.Json;
 using Shippo.Models;
-using EvenCart.Core.Exception;
+using Genesis.Exceptions;
 
 namespace Shippo
 {

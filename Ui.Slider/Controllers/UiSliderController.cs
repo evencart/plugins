@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Data;
-using EvenCart.Core.Services;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.MediaServices;
+using Genesis.Modules.Data;
+using Genesis.Routing;
+using Genesis.Services;
 using Microsoft.AspNetCore.Mvc;
 using Ui.Slider.Data;
 using Ui.Slider.Models;
@@ -13,7 +13,7 @@ using Ui.Slider.Services;
 
 namespace Ui.Slider.Controllers
 {
-    public class UiSliderController : FoundationAdminController
+    public class UiSliderController : GenesisAdminController
     {
         private readonly IUiSliderService _uiSliderService;
         private readonly IModelMapper _modelMapper;

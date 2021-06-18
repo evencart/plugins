@@ -1,10 +1,10 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
-using FluentValidation;
+﻿using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace Ui.Slider.Models
 {
-    public class UiSliderModel : FoundationEntityModel, IRequiresValidations<UiSliderModel>
+    public class UiSliderModel : GenesisEntityModel, IRequiresValidations<UiSliderModel>
     {
         public string Title { get; set; }
 

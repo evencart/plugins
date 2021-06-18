@@ -1,4 +1,4 @@
-﻿using EvenCart.Core.Startup;
+﻿using Genesis.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

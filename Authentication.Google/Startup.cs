@@ -1,6 +1,5 @@
-﻿using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Startup;
-using EvenCart.Infrastructure;
+﻿using Genesis;
+using Genesis.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,11 +13,11 @@ namespace Authentication.Google
             services.AddAuthentication(GoogleConfig.GoogleAuthenticationScheme)
                 .AddGoogle(GoogleConfig.GoogleAuthenticationScheme, options =>
                     {
-                        var settings = DependencyResolver.Resolve<GoogleSettings>();
+                        var settings = D.Resolve<GoogleSettings>();
                         options.ClientId = settings.ClientId;
                         options.ClientSecret = settings.ClientSecret;
                         options.SaveTokens = true;
-                        options.SignInScheme = ApplicationConfig.ExternalAuthenticationScheme;
+                        options.SignInScheme = GenesisApp.Current.ApplicationConfig.ExternalAuthenticationScheme;
                     });
         }
 

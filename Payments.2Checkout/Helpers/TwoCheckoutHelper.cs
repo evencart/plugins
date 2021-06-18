@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Data.Enum;
-using EvenCart.Services.HttpServices;
-using EvenCart.Services.Logger;
-using Address = EvenCart.Data.Entity.Addresses.Address;
+using Genesis;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Data;
+using Genesis.Modules.Http;
+using Genesis.Modules.Logging;
 
 namespace Payments.TwoCheckout.Helpers
 {
@@ -31,7 +30,7 @@ namespace Payments.TwoCheckout.Helpers
         public static TransactionResult ProcessPayment(TransactionRequest request, TwoCheckoutSettings twoCheckoutSettings, ILogger logger)
         {
             var authUrl = GetAuthorizeUrl(twoCheckoutSettings);
-            var requestProvider = DependencyResolver.Resolve<IRequestProvider>();
+            var requestProvider = D.Resolve<IRequestProvider>();
 
             var parameters = request.Parameters;
             parameters.TryGetValue("requestToken", out var requestToken);
@@ -107,7 +106,7 @@ namespace Payments.TwoCheckout.Helpers
         public static TransactionResult ProcessRefund(TransactionRequest refundRequest, TwoCheckoutSettings twoCheckoutSettings, ILogger logger)
         {
             var refundUrl = GetRefundUrl(twoCheckoutSettings);
-            var requestProvider = DependencyResolver.Resolve<IRequestProvider>();
+            var requestProvider = D.Resolve<IRequestProvider>();
 
             var parameters = refundRequest.Parameters;
             parameters.TryGetValue("invoiceId", out var invoiceId);

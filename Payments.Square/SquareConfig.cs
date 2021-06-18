@@ -1,4 +1,4 @@
-﻿using EvenCart.Core;
+﻿using Genesis;
 
 namespace Payments.Square
 {

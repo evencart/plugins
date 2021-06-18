@@ -1,4 +1,4 @@
-﻿using EvenCart.Core.Config;
+﻿using Genesis.Config;
 
 namespace Payments.CashOnDelivery
 {

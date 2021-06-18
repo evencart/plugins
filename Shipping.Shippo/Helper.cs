@@ -1,5 +1,5 @@
 ﻿using System;
-using EvenCart.Data.Entity.Shop;
+using Genesis.Modules.Data;
 
 namespace Shipping.Shippo
 {

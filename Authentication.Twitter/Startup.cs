@@ -1,6 +1,5 @@
-﻿using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Startup;
-using EvenCart.Infrastructure;
+﻿using Genesis;
+using Genesis.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,11 +13,11 @@ namespace Authentication.Twitter
             services.AddAuthentication(TwitterConfig.TwitterAuthenticationScheme)
                 .AddTwitter(TwitterConfig.TwitterAuthenticationScheme, options =>
                     {
-                        var settings = DependencyResolver.Resolve<TwitterSettings>();
+                        var settings = D.Resolve<TwitterSettings>();
                         options.ConsumerKey = settings.ClientId;
                         options.ConsumerSecret = settings.ClientSecret;
                         options.SaveTokens = true;
-                        options.SignInScheme = ApplicationConfig.ExternalAuthenticationScheme;
+                        options.SignInScheme = GenesisApp.Current.ApplicationConfig.ExternalAuthenticationScheme;
                     });
         }
 

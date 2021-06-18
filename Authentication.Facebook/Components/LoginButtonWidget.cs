@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Core.Plugins;
-using EvenCart.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Plugins;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Authentication.Facebook.Components
 {
     [ViewComponent(Name = WidgetSystemName)]
-    public class LoginButtonWidget : FoundationComponent, IWidget
+    public class LoginButtonWidget : GenesisComponent, IWidget
     {
        
         public const string WidgetSystemName = "FacebookLoginButton";

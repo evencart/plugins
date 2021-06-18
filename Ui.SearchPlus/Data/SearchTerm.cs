@@ -1,8 +1,8 @@
-﻿using EvenCart.Core.Data;
+﻿using Genesis.Data;
 
 namespace Ui.SearchPlus.Data
 {
-    public class SearchTerm : FoundationEntity
+    public class SearchTerm : GenesisEntity
     {
         public string Term { get; set; }
 

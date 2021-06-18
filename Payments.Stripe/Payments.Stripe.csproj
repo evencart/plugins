@@ -55,20 +55,8 @@
     <PackageReference Include="Stripe.net" Version="35.6.0" />
   </ItemGroup>
 
-
   <ItemGroup>
-    <ProjectReference Include="..\..\src\EvenCart.Core\EvenCart.Core.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\EvenCart.Data\EvenCart.Data.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\EvenCart.Infrastructure\EvenCart.Infrastructure.csproj">
-      <Private>false</Private>
-    </ProjectReference>
-    <ProjectReference Include="..\..\src\EvenCart.Services\EvenCart.Services.csproj">
-      <Private>false</Private>
-    </ProjectReference>
+    <ProjectReference Include="..\..\src\EvenCart.Genesis\EvenCart.Genesis.csproj" />
   </ItemGroup>
 
   <ItemGroup>

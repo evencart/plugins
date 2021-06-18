@@ -1,10 +1,10 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
-using FluentValidation;
+﻿using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace Payments.PaypalWithRedirect.Models
 {
-    public class SettingsModel : FoundationModel, IRequiresValidations<SettingsModel>
+    public class SettingsModel : GenesisModel, IRequiresValidations<SettingsModel>
     {
         public bool EnableSandbox { get; set; }
 

@@ -1,8 +1,8 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
+﻿using Genesis.Infrastructure.Mvc.Models;
 
 namespace Payments.Stripe.Models
 {
-    public class RedirectToStripeModel : FoundationModel
+    public class RedirectToStripeModel : GenesisModel
     {
         public string PublishableKey { get; set; }
 

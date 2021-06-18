@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using EvenCart.Core.Config;
+using Genesis.Config;
 
 namespace Shipping.UPS
 {

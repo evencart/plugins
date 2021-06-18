@@ -6,17 +6,17 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
-using EvenCart.Core.Plugins;
-using EvenCart.Data.Entity.Addresses;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure;
-using EvenCart.Services.Converters;
 using EvenCart.Services.Plugins;
+using Genesis;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Data;
+using Genesis.Plugins;
 
 namespace Shipping.UPS
 {
-    public class UPSProviderPlugin : FoundationPlugin, IShipmentHandlerPlugin
+    public class UPSProviderPlugin : GenesisPlugin, IShipmentHandlerPlugin
     {
         private const int DEFAULT_TIMEOUT = 10;
         private const string DEVELOPMENT_RATES_URL = "https://wwwcie.ups.com/ups.app/xml/Rate";
@@ -78,7 +78,7 @@ namespace Shipping.UPS
         public bool SupportsLabelPurchase { get; } = false;
 
         public override string ConfigurationUrl =>
-            ApplicationEngine.RouteUrl(UPSProviderConfig.UPSProviderSettingsRouteName);
+            GenesisEngine.Instance.RouteUrl(UPSProviderConfig.UPSProviderSettingsRouteName);
 
         #region Private 
         private byte[] BuildRatesRequestMessage(IList<(Product, int)> products, Address shipperInfo, Address receiverInfo)

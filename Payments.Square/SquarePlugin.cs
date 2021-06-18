@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Core.Plugins;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Extensions;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Services.Logger;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Modules.Localization;
+using Genesis.Modules.Logging;
+using Genesis.Plugins;
 using Payments.Square.Helpers;
 
 namespace Payments.Square
 {
-    public class SquarePlugin : FoundationPlugin, IPaymentHandlerPlugin
+    public class SquarePlugin : GenesisPlugin, IPaymentHandlerPlugin
     {
         private readonly SquareSettings _squareSettings;
         private readonly ILogger _logger;
@@ -76,7 +76,7 @@ namespace Payments.Square
         }
 
         public override string ConfigurationUrl =>
-            ApplicationEngine.RouteUrl(SquareConfig.SquareSettingsRouteName);
+            GenesisEngine.Instance.RouteUrl(SquareConfig.SquareSettingsRouteName);
 
         #region Helpers
         private static bool ExpiryCheck(string month, string year)

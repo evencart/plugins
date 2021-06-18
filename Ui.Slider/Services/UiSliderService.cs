@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using DotEntity.Enumerations;
-using EvenCart.Core.Services;
-using EvenCart.Data.Entity.MediaEntities;
-using EvenCart.Data.Extensions;
+using Genesis.Extensions;
+using Genesis.Modules.MediaServices;
+using Genesis.Services;
 using Ui.Slider.Data;
 
 namespace Ui.Slider.Services
 {
-    public class UiSliderService : FoundationEntityService<UiSlider>, IUiSliderService
+    public class UiSliderService : GenesisEntityService<UiSlider>, IUiSliderService
     {
         public override UiSlider Get(int id)
         {

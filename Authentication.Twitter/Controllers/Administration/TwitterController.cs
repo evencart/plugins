@@ -1,13 +1,13 @@
-﻿using EvenCart.Services.Settings;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Authentication.Twitter.Models;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 
 namespace Authentication.Twitter.Controllers.Administration
 {
-    public class TwitterController : FoundationPluginAdminController
+    public class TwitterController : GenesisPluginAdminController
     {
         private readonly TwitterSettings _twitterSettings;
         private readonly ISettingService _settingService;

@@ -1,11 +1,11 @@
 ﻿using DryIoc;
-using EvenCart.Core.Infrastructure;
+using Genesis.Infrastructure.DependencyManager;
 using Ui.SearchPlus.Factories;
 using Ui.SearchPlus.Services;
 
 namespace Ui.SearchPlus
 {
-    public class DependencyContainer : IDependencyContainer
+    public class DependencyContainer : IPluginDependencyContainer
     {
         public void RegisterDependencies(IRegistrator registrar)
         {

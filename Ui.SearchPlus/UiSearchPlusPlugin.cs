@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using DotEntity.Versioning;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Services.Plugins;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Plugins;
-using EvenCart.Services.Settings;
+using Genesis;
+using Genesis.Modules.Pluggable;
+using Genesis.Modules.Settings;
+using Genesis.Plugins;
 using Ui.SearchPlus.Components;
 using Ui.SearchPlus.Versions;
 
@@ -29,28 +28,28 @@ namespace Ui.SearchPlus
         }
 
         public override string ConfigurationUrl =>
-            ApplicationEngine.RouteUrl(UiSearchPlusRouteNames.UiSearchPlusConfigure);
+            GenesisEngine.Instance.RouteUrl(UiSearchPlusRouteNames.UiSearchPlusConfigure);
 
         public override void Install()
         {
             base.Install();
             //install the widget
-            var widgetId = DependencyResolver.Resolve<IPluginAccountant>().AddWidget(SearchPlusWidget.WidgetSystemName, "EvenCart.Ui.SearchPlus", "after_global_search");
+            var widgetId = D.Resolve<IPluginAccountant>().AddWidget(SearchPlusWidget.WidgetSystemName, "EvenCart.Ui.SearchPlus", "after_global_search");
             _settingService.Save(new SearchPlusSettings()
             {
                 WidgetId = widgetId,
                 SearchBoxId = DefaultSearchBoxId,
                 NumberOfAutoCompleteResults = 10,
                 ShowTermCategory = false
-            }, ApplicationEngine.CurrentStore.Id);
+            }, GenesisEngine.Instance.CurrentStore.Id);
         }
 
         public override void Uninstall()
         {
             base.Uninstall();
-            var settings = DependencyResolver.Resolve<SearchPlusSettings>();
-            DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<SearchPlusSettings>(ApplicationEngine.CurrentStore.Id);
+            var settings = D.Resolve<SearchPlusSettings>();
+            D.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
+            _settingService.DeleteSettings<SearchPlusSettings>(GenesisEngine.Instance.CurrentStore.Id);
         }
     }
 }

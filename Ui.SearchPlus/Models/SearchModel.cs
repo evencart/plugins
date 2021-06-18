@@ -1,8 +1,8 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
+﻿using Genesis.Infrastructure.Mvc.Models;
 
 namespace Ui.SearchPlus.Models
 {
-    public class SearchModel : FoundationModel
+    public class SearchModel : GenesisModel
     {
         public string Term { get; set; }
     }

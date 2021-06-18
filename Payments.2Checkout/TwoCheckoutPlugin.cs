@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Core.Plugins;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
-using EvenCart.Data.Extensions;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Services.Logger;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Modules.Localization;
+using Genesis.Modules.Logging;
+using Genesis.Plugins;
 using Payments.TwoCheckout.Helpers;
 
 namespace Payments.TwoCheckout
 {
-    public class TwoCheckoutPlugin : FoundationPlugin, IPaymentHandlerPlugin
+    public class TwoCheckoutPlugin : GenesisPlugin, IPaymentHandlerPlugin
     {
         private readonly TwoCheckoutSettings _twoCheckoutSettings;
         private readonly ILogger _logger;
@@ -71,7 +71,7 @@ namespace Payments.TwoCheckout
         }
 
         public override string ConfigurationUrl =>
-            ApplicationEngine.RouteUrl(TwoCheckoutConfig.TwoCheckoutSettingsRouteName);
+            GenesisEngine.Instance.RouteUrl(TwoCheckoutConfig.TwoCheckoutSettingsRouteName);
 
         #region Helpers
         private static bool ExpiryCheck(string month, string year)

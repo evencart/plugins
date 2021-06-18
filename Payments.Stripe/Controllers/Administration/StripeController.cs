@@ -1,13 +1,13 @@
-﻿using EvenCart.Services.Settings;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
+﻿using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Payments.Stripe.Models;
 
 namespace Payments.Stripe.Controllers.Administration
 {
-    public class StripeController : FoundationPluginAdminController
+    public class StripeController : GenesisPluginAdminController
     {
         private readonly StripeSettings _stripeSettings;
         private readonly ISettingService _settingService;

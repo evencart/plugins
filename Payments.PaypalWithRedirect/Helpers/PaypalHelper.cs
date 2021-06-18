@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Core.Infrastructure;
 using EvenCart.Data.Entity.Payments;
-using EvenCart.Data.Extensions;
-using EvenCart.Services.Settings;
-using EvenCart.Infrastructure;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Modules.Settings;
 using Payments.PaypalWithRedirect.Models;
 using PayPal.Core;
 using PayPal.v1.PaymentExperience;
@@ -46,8 +45,8 @@ namespace Payments.PaypalWithRedirect.Helpers
                 },
                 RedirectUrls = new RedirectUrls()
                 {
-                    ReturnUrl = ApplicationEngine.RouteUrl(PaypalConfig.PaypalWithRedirectReturnUrlRouteName, new {orderGuid = order.Guid}, absoluteUrl: true),
-                    CancelUrl = ApplicationEngine.RouteUrl(PaypalConfig.PaypalWithRedirectCancelUrlRouteName, new { orderGuid = order.Guid }, absoluteUrl: true),
+                    ReturnUrl = GenesisEngine.Instance.RouteUrl(PaypalConfig.PaypalWithRedirectReturnUrlRouteName, new {orderGuid = order.Guid}, absoluteUrl: true),
+                    CancelUrl = GenesisEngine.Instance.RouteUrl(PaypalConfig.PaypalWithRedirectCancelUrlRouteName, new { orderGuid = order.Guid }, absoluteUrl: true),
                 },
                 Payer = payer
             };
@@ -222,8 +221,8 @@ namespace Payments.PaypalWithRedirect.Helpers
                 var result = response.Result<WebProfile>();
                 var id = result.Id;
                 paypalSettings.CheckoutProfileId = id;
-                var settingService = DependencyResolver.Resolve<ISettingService>();
-                settingService.Save(paypalSettings, ApplicationEngine.CurrentStore.Id);
+                var settingService = D.Resolve<ISettingService>();
+                settingService.Save(paypalSettings, GenesisEngine.Instance.CurrentStore.Id);
                 return id;
             }
             catch (BraintreeHttp.HttpException ex)

@@ -1,37 +1,37 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using EvenCart.Core.Plugins;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Data.Entity.Shop;
-using EvenCart.Infrastructure;
 using EvenCart.Services.Plugins;
-using Address = EvenCart.Data.Entity.Addresses.Address;
 using Shippo;
 using Shippo.Models;
-using EvenCart.Services.Converters;
 using System.Linq;
-using EvenCart.Core.Exception;
+using EvenCart.Genesis.Exceptions;
 using Newtonsoft.Json;
 using static Shippo.ShippoEnums;
-using EvenCart.Services.Addresses;
+using Genesis;
+using Genesis.Exceptions;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Data;
+using Genesis.Plugins;
+using Address = Genesis.Modules.Addresses.Address;
 
 namespace Shipping.Shippo
 {
-    public class ProviderPlugin : FoundationPlugin, IShipmentHandlerPlugin
+    public class ProviderPlugin : GenesisPlugin, IShipmentHandlerPlugin
     {
-        private readonly ShippoSettings _shippoSettings;
         private readonly IConverterService _converterService;
         private readonly IStateOrProvinceService _stateProvinceService;
-        public ProviderPlugin(ShippoSettings ShippoSettings, IConverterService converterService,
+        public ProviderPlugin(IConverterService converterService,
             IStateOrProvinceService stateProvinceService)
         {
-            _shippoSettings = ShippoSettings;
             _converterService = converterService;
             _stateProvinceService = stateProvinceService;
         }
         private APIResource InitResource()
         {
+            var _shippoSettings = D.Resolve<ShippoSettings>();
             var API_KEY = _shippoSettings.DebugMode ? _shippoSettings.TestApiKey : _shippoSettings.LiveApiKey;
             return new APIResource(API_KEY);
         }
@@ -42,10 +42,10 @@ namespace Shipping.Shippo
             return true;
         }
 
-        public IList<ShippingOption> GetAvailableOptions(IList<Product> products, Address shipperInfo, Address receiverInfo)
+        public IList<ShippingOption> GetAvailableOptions(IList<Product> products, Genesis.Modules.Addresses.Address shipperInfo, Address receiverInfo)
         {
             var shippingOptions = new List<ShippingOption>();
-
+            
             var shipmentTable = CreateShipmentConfig(products, shipperInfo, receiverInfo);
 
             var resource = InitResource();
@@ -74,7 +74,7 @@ namespace Shipping.Shippo
             return shippingOptions;
         }
 
-        public IList<ShippingOption> GetAvailableOptions(IList<(Product, int)> products, Address shipperInfo, Address receiverInfo)
+        public IList<ShippingOption> GetAvailableOptions(IList<(Product, int)> products, Genesis.Modules.Addresses.Address shipperInfo, Address receiverInfo)
         {
             var productList = new List<Product>();
             foreach (var item in products)
@@ -111,7 +111,7 @@ namespace Shipping.Shippo
         }
 
         public override string ConfigurationUrl =>
-            ApplicationEngine.RouteUrl(ProviderConfig.ShippoProviderSettingsRouteName);
+            GenesisEngine.Instance.RouteUrl(ProviderConfig.ShippoProviderSettingsRouteName);
 
         #region Private 
         private Hashtable CreateShipmentConfig(IList<Product> products, Address shipperInfo, Address receiverInfo)
@@ -123,7 +123,7 @@ namespace Shipping.Shippo
             //    if (state != null)
             //        toAddressStateName = state.Name;
             //}
-
+            var _shippoSettings = D.Resolve<ShippoSettings>();
             Hashtable toAddressTable = new Hashtable();
             toAddressTable.Add("name", receiverInfo.Name);
             toAddressTable.Add("street1", receiverInfo.Address1);

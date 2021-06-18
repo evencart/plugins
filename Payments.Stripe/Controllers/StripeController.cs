@@ -1,12 +1,11 @@
 ﻿using System;
-using EvenCart.Data.Enum;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Logger;
-using EvenCart.Services.Purchases;
+using EvenCart.Services.Orders;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Logging;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Payments.Stripe.Helpers;
@@ -16,7 +15,7 @@ namespace Payments.Stripe.Controllers
 {
     [Route("stripe")]
     [PluginType(PluginType = typeof(StripePlugin))]
-    public class StripeController : FoundationPluginController
+    public class StripeController : GenesisPluginController
     {
         private readonly IOrderService _orderService;
         private readonly StripeSettings _stripeSettings;
@@ -59,7 +58,7 @@ namespace Payments.Stripe.Controllers
         {
             try
             {
-                StripeHelper.ParseWebhookResponse(ApplicationEngine.CurrentHttpContext.Request);
+                StripeHelper.ParseWebhookResponse(GenesisEngine.Instance.CurrentHttpContext.Request);
             }
             catch (Exception ex)
             {
@@ -93,7 +92,7 @@ namespace Payments.Stripe.Controllers
             {
                 PublishableKey = StripeHelper.GetPublishableKey(_stripeSettings),
                 SessionId = sessionId,
-                CancelUrl = ApplicationEngine.RouteUrl(RouteNames.CheckoutPayment, new {orderGuid, error = true})
+                CancelUrl = GenesisEngine.Instance.RouteUrl(RouteNames.CheckoutPayment, new {orderGuid, error = true})
             };
             return R.Success.With("redirectInfo", model).Result;
         }

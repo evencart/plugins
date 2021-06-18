@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using EvenCart.Data.Entity.Social;
-using EvenCart.Infrastructure;
+using Genesis;
+using Genesis.Modules.Users;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Authentication.Facebook.Helpers
@@ -10,7 +10,7 @@ namespace Authentication.Facebook.Helpers
     {
         public static async Task<ConnectedAccountRequest> CreateConnectedAccountRequestAsync()
         {
-            var authenticationResult = await ApplicationEngine.CurrentHttpContext.AuthenticateAsync(FacebookConfig.FacebookAuthenticationScheme);
+            var authenticationResult = await GenesisEngine.Instance.CurrentHttpContext.AuthenticateAsync(FacebookConfig.FacebookAuthenticationScheme);
             if (!authenticationResult.Succeeded)
                 return null;
             var userPrincipal = authenticationResult.Principal;
@@ -21,7 +21,7 @@ namespace Authentication.Facebook.Helpers
                 LastName = userPrincipal.FindFirstValue(ClaimTypes.Surname),
                 ProviderUserId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier),
                 ProviderName = "Facebook",
-                AccessToken = await ApplicationEngine.CurrentHttpContext.GetTokenAsync("access_token")
+                AccessToken = await GenesisEngine.Instance.CurrentHttpContext.GetTokenAsync("access_token")
             };
         }
 

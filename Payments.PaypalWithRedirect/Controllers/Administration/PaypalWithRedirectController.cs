@@ -1,13 +1,13 @@
-﻿using EvenCart.Services.Settings;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
+﻿using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Payments.PaypalWithRedirect.Models;
 
 namespace Payments.PaypalWithRedirect.Controllers.Administration
 {
-    public class PaypalWithRedirectController : FoundationPluginAdminController
+    public class PaypalWithRedirectController : GenesisPluginAdminController
     {
         private readonly PaypalWithRedirectSettings _paypalWithRedirectSettings;
         private readonly ISettingService _settingService;

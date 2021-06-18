@@ -1,8 +1,8 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
+﻿using Genesis.Infrastructure.Mvc.Models;
 
 namespace Payments.Square.Models
 {
-    public class PaymentInfoModel : FoundationModel
+    public class PaymentInfoModel : GenesisModel
     {
         public string ApplicationId { get; set; }
 

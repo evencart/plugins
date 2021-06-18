@@ -1,13 +1,13 @@
-﻿using EvenCart.Services.Settings;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
+﻿using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Payments.TwoCheckout.Models;
 
 namespace Payments.TwoCheckout.Controllers.Administration
 {
-    public class TwoCheckoutController : FoundationPluginAdminController
+    public class TwoCheckoutController : GenesisPluginAdminController
     {
         private readonly TwoCheckoutSettings _twoCheckoutSettings;
         private readonly ISettingService _settingService;

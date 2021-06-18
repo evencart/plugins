@@ -1,13 +1,13 @@
-﻿using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Settings;
+﻿using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Shipping.Shippo.Models;
 
 namespace Shipping.Shippo.Controllers.Administration
 {
-    public class ShippoController : FoundationPluginAdminController
+    public class ShippoController : GenesisPluginAdminController
     {
         private readonly ISettingService _settingService;
         private readonly ShippoSettings _ShippoSettings;

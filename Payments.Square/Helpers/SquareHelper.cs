@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart;
 using EvenCart.Data.Entity.Payments;
-using EvenCart.Data.Enum;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
+using EvenCart.Genesis;
 using EvenCart.Services.Extensions;
-using EvenCart.Services.Logger;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Modules.Data;
+using Genesis.Modules.Logging;
+using Genesis.Modules.Meta;
 using Microsoft.AspNetCore.Http;
 using Square.Connect.Api;
 using Square.Connect.Client;
@@ -50,8 +51,8 @@ namespace Payments.Square.Helpers
             var config = GetConfiguration(squareSettings);
             var nonce = request.GetParameterAs<string>("nonce");
             var location = GetApplicationLocations(squareSettings, logger).FirstOrDefault(x => x.Id == squareSettings.LocationId);
-            var billingAddress = order.BillingAddressSerialized.To<EvenCart.Data.Entity.Addresses.Address>();
-            var shippingAddress = order.ShippingAddressSerialized?.To<EvenCart.Data.Entity.Addresses.Address>();
+            var billingAddress = order.BillingAddressSerialized.To<Genesis.Modules.Addresses.Address>();
+            var shippingAddress = order.ShippingAddressSerialized?.To<Genesis.Modules.Addresses.Address>();
             var customerId = order.User.GetPropertyValueAs<string>(SquareCustomerIdKey);
             if (customerId.IsNullEmptyOrWhiteSpace())
             {
@@ -146,7 +147,7 @@ namespace Payments.Square.Helpers
                     Amount = (long)((refundRequest.IsPartialRefund ?refundRequest.Amount : order.OrderTotal) * 100)
                 },
                 PaymentId = paymentId,
-                Reason = "Refunded by administrator " + ApplicationEngine.CurrentUser.Name
+                Reason = "Refunded by administrator " + GenesisEngine.Instance.CurrentUser.Name
             });
 
             //perform the call

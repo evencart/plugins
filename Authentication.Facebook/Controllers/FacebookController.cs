@@ -1,20 +1,19 @@
 ﻿using System.Threading.Tasks;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Authentication.Facebook.Helpers;
-using EvenCart.Core;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Social;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Authentication.Facebook.Controllers
 {
     [Route("authentication")]
     [PluginType(PluginType = typeof(FacebookAuthPlugin))]
-    public class FacebookController : FoundationPluginController
+    public class FacebookController : GenesisPluginController
     {
         private readonly IConnectionAccountant _connectionAccountant;
         public FacebookController(IConnectionAccountant connectionAccountant)
@@ -28,7 +27,7 @@ namespace Authentication.Facebook.Controllers
             var returnUrl = WebHelper.GetReferrerUrl();
             var authenticationProperties = new AuthenticationProperties
             {
-                RedirectUri = ApplicationEngine.RouteUrl(FacebookConfig.FacebookRedirectUrl, new { returnUrl })
+                RedirectUri = GenesisEngine.Instance.RouteUrl(FacebookConfig.FacebookRedirectUrl, new { returnUrl })
             };
             return Challenge(authenticationProperties,  FacebookConfig.FacebookAuthenticationScheme);
         }
@@ -37,7 +36,7 @@ namespace Authentication.Facebook.Controllers
         public async Task<IActionResult> HandleRedirect(string returnUrl)
         {
             if (returnUrl.IsNullEmptyOrWhiteSpace())
-                returnUrl = ApplicationEngine.RouteUrl(RouteNames.Home);
+                returnUrl = GenesisEngine.Instance.RouteUrl(RouteNames.Home);
             var request = await FacebookHelper.CreateConnectedAccountRequestAsync();
             if (_connectionAccountant.Connect(request))
                 return Redirect(returnUrl);

@@ -1,13 +1,13 @@
-﻿using EvenCart.Services.Settings;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Authentication.Facebook.Models;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 
 namespace Authentication.Facebook.Controllers.Administration
 {
-    public class FacebookController : FoundationPluginAdminController
+    public class FacebookController : GenesisPluginAdminController
     {
         private readonly FacebookSettings _facebookSettings;
         private readonly ISettingService _settingService;

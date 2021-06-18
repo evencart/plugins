@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using DotEntity.Enumerations;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Infrastructure.Security.Attributes;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Security.Attributes;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Ui.SearchPlus.Data;
 using Ui.SearchPlus.Models.Administration;
@@ -12,7 +12,7 @@ using Ui.SearchPlus.Services;
 
 namespace Ui.SearchPlus.Controllers.Administration
 {
-    public class SearchPlusController : FoundationAdminController
+    public class SearchPlusController : GenesisAdminController
     {
         private readonly ISearchTermService _searchTermService;
         private readonly IModelMapper _modelMapper;

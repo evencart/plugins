@@ -1,7 +1,8 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using EvenCart.Data.Entity.Social;
-using EvenCart.Infrastructure;
+using EvenCart.Genesis;
+using Genesis;
+using Genesis.Modules.Users;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Authentication.Twitter.Helpers
@@ -10,7 +11,7 @@ namespace Authentication.Twitter.Helpers
     {
         public static async Task<ConnectedAccountRequest> CreateConnectedAccountRequestAsync()
         {
-            var authenticationResult = await ApplicationEngine.CurrentHttpContext.AuthenticateAsync(TwitterConfig.TwitterAuthenticationScheme);
+            var authenticationResult = await GenesisEngine.Instance.CurrentHttpContext.AuthenticateAsync(TwitterConfig.TwitterAuthenticationScheme);
             if (!authenticationResult.Succeeded)
                 return null;
             var userPrincipal = authenticationResult.Principal;
@@ -21,7 +22,7 @@ namespace Authentication.Twitter.Helpers
                 LastName = userPrincipal.FindFirstValue(ClaimTypes.Surname),
                 ProviderUserId = userPrincipal.FindFirstValue(ClaimTypes.NameIdentifier),
                 ProviderName = "Twitter",
-                AccessToken = await ApplicationEngine.CurrentHttpContext.GetTokenAsync("access_token")
+                AccessToken = await GenesisEngine.Instance.CurrentHttpContext.GetTokenAsync("access_token")
             };
         }
 

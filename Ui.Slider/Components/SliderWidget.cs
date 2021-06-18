@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EvenCart.Core.Plugins;
-using EvenCart.Infrastructure.MediaServices;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.ModelFactories;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.ModelFactories;
+using Genesis.MediaServices;
+using Genesis.Plugins;
 using Microsoft.AspNetCore.Mvc;
 using Ui.Slider.Models;
 using Ui.Slider.Services;
@@ -12,7 +12,7 @@ using Ui.Slider.Services;
 namespace Ui.Slider.Components
 {
     [ViewComponent(Name = WidgetSystemName)]
-    public class SliderWidget : FoundationComponent, IWidget
+    public class SliderWidget : GenesisComponent, IWidget
     {
         private readonly IUiSliderService _uiSliderService;
         private readonly IModelMapper _modelMapper;

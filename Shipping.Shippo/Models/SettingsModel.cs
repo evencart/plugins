@@ -1,9 +1,9 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
+﻿using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace Shipping.Shippo.Models
 {
-    public class SettingsModel : FoundationModel, IRequiresValidations<SettingsModel>
+    public class SettingsModel : GenesisModel, IRequiresValidations<SettingsModel>
     {
         public bool DebugMode { get; set; }
 

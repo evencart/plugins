@@ -1,13 +1,12 @@
 ﻿using Authentication.Google.Components;
-using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Plugins;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Plugins;
-using EvenCart.Services.Settings;
+using Genesis;
+using Genesis.Modules.Pluggable;
+using Genesis.Modules.Settings;
+using Genesis.Plugins;
 
 namespace Authentication.Google
 {
-    public class GoogleAuthPlugin : FoundationPlugin
+    public class GoogleAuthPlugin : GenesisPlugin
     {
         private readonly ISettingService _settingService;
         public GoogleAuthPlugin(ISettingService settingService)
@@ -19,23 +18,23 @@ namespace Authentication.Google
         {
             base.Install();
             //install the widget
-            var widgetId = DependencyResolver.Resolve<IPluginAccountant>().AddWidget(LoginButtonWidget.WidgetSystemName, "EvenCart.Authentication.Google", "login");
+            var widgetId = D.Resolve<IPluginAccountant>().AddWidget(LoginButtonWidget.WidgetSystemName, "EvenCart.Authentication.Google", "login");
             _settingService.Save(new GoogleSettings()
             {
                 WidgetId = widgetId,
                 ClientId = "xxxx",
                 ClientSecret = "xxxx"
-            }, ApplicationEngine.CurrentStore.Id);
+            }, GenesisEngine.Instance.CurrentStore.Id);
         }
 
         public override void Uninstall()
         {
             base.Uninstall();
-            var settings = DependencyResolver.Resolve<GoogleSettings>();
-            DependencyResolver.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
-            _settingService.DeleteSettings<GoogleSettings>(ApplicationEngine.CurrentStore.Id);
+            var settings = D.Resolve<GoogleSettings>();
+            D.Resolve<IPluginAccountant>().DeleteWidget(settings.WidgetId);
+            _settingService.DeleteSettings<GoogleSettings>(GenesisEngine.Instance.CurrentStore.Id);
         }
 
-        public override string ConfigurationUrl => ApplicationEngine.RouteUrl(GoogleConfig.GoogleSettingsRouteName);
+        public override string ConfigurationUrl => GenesisEngine.Instance.RouteUrl(GoogleConfig.GoogleSettingsRouteName);
     }
 }

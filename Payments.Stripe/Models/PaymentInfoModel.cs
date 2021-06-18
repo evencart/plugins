@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using EvenCart.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Payments.Stripe.Models
 {
-    public class PaymentInfoModel : FoundationModel
+    public class PaymentInfoModel : GenesisModel
     {
         public PaymentInfoModel()
         {

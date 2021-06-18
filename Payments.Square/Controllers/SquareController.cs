@@ -1,10 +1,11 @@
-﻿using EvenCart;
-using EvenCart.Data.Entity.Addresses;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Services.Purchases;
+﻿using EvenCart.Genesis;
+using EvenCart.Services.Orders;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Addresses;
+using Genesis.Modules.Data;
 using Microsoft.AspNetCore.Mvc;
 using Payments.Square.Helpers;
 using Payments.Square.Models;
@@ -13,7 +14,7 @@ namespace Payments.Square.Controllers
 {
     [Route("square")]
     [PluginType(PluginType = typeof(SquarePlugin))]
-    public class SquareController : FoundationPluginController
+    public class SquareController : GenesisPluginController
     {
         private SquareSettings _squareSettings;
         private readonly ICartService _cartService;
@@ -51,7 +52,7 @@ namespace Payments.Square.Controllers
         [HttpPost("webhook", Name = SquareConfig.SquareWebhookUrl)]
         public IActionResult Webhook()
         {
-            SquareHelper.ParseWebhookResponse(ApplicationEngine.CurrentHttpContext.Request);
+            SquareHelper.ParseWebhookResponse(GenesisEngine.Instance.CurrentHttpContext.Request);
             return Ok();
         }
     }

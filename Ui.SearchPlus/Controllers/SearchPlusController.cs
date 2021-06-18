@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using DotEntity.Enumerations;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
 using EvenCart.Services.Products;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Ui.SearchPlus.Factories;
 using Ui.SearchPlus.Models;
@@ -13,7 +13,7 @@ using Ui.SearchPlus.Services;
 namespace Ui.SearchPlus.Controllers
 {
     [PluginType(PluginType = typeof(UiSearchPlusPlugin))]
-    public class SearchPlusController : FoundationPluginController
+    public class SearchPlusController : GenesisPluginController
     {
         private readonly ISearchTermService _searchTermService;
         private readonly IProductService _productService;

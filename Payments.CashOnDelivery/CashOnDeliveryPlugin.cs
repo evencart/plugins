@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using EvenCart.Core.Plugins;
 using EvenCart.Data.Entity.Payments;
 using EvenCart.Data.Entity.Purchases;
 using EvenCart.Services.Payments;
 using EvenCart.Services.Plugins;
-using EvenCart.Infrastructure;
-using EvenCart.Services.Logger;
+using Genesis;
+using Genesis.Modules.Logging;
+using Genesis.Plugins;
 
 namespace Payments.CashOnDelivery
 {
-    public class CashOnDeliveryPlugin : FoundationPlugin, IPaymentHandlerPlugin
+    public class CashOnDeliveryPlugin : GenesisPlugin, IPaymentHandlerPlugin
     {
         private readonly CashOnDeliverySettings _cashOnDeliverySettings;
         private readonly ILogger _logger;
@@ -63,6 +63,6 @@ namespace Payments.CashOnDelivery
         }
 
         public override string ConfigurationUrl =>
-            ApplicationEngine.RouteUrl(CashOnDeliveryConfig.CashOnDeliverySettingsRouteName);
+            GenesisEngine.Instance.RouteUrl(CashOnDeliveryConfig.CashOnDeliverySettingsRouteName);
     }
 }

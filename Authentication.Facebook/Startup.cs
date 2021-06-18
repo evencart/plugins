@@ -1,7 +1,6 @@
-﻿using EvenCart.Core.Infrastructure;
-using EvenCart.Core.Startup;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
+﻿using Genesis;
+using Genesis.Extensions;
+using Genesis.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +14,7 @@ namespace Authentication.Facebook
             services.AddAuthentication(FacebookConfig.FacebookAuthenticationScheme)
                 .AddFacebook(FacebookConfig.FacebookAuthenticationScheme, options =>
                     {
-                        var settings = DependencyResolver.Resolve<FacebookSettings>();
+                        var settings = D.Resolve<FacebookSettings>();
                         var clientId = settings.ClientId.IsNullEmptyOrWhiteSpace() ? "XXXX" : settings.ClientId;
                         var clientSecret = settings.ClientSecret.IsNullEmptyOrWhiteSpace() ? "XXXX" : settings.ClientSecret;
                         options.AppId = clientId;
@@ -25,7 +24,7 @@ namespace Authentication.Facebook
                         options.Fields.Add("birthday");
                         options.Fields.Add("picture");
                         options.Fields.Add("name");
-                        options.SignInScheme = ApplicationConfig.ExternalAuthenticationScheme;
+                        options.SignInScheme = GenesisApp.Current.ApplicationConfig.ExternalAuthenticationScheme;
 
                     });
         }

@@ -1,16 +1,16 @@
 ﻿using System.Linq;
-using EvenCart.Infrastructure.Helpers;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
-using EvenCart.Services.Settings;
+using Genesis.Helpers;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Settings;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Shipping.UPS.Models;
 
 namespace Shipping.UPS.Controllers.Administration
 {
-    public class UPSController : FoundationPluginAdminController
+    public class UPSController : GenesisPluginAdminController
     {
         private readonly ISettingService _settingService;
         private readonly UPSSettings _upsSettings;

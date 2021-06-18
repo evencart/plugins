@@ -1,20 +1,19 @@
 ﻿using System.Threading.Tasks;
-using EvenCart.Infrastructure.Mvc;
-using EvenCart.Infrastructure.Mvc.Attributes;
-using EvenCart.Infrastructure.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Authentication.Google.Helpers;
-using EvenCart.Core;
-using EvenCart.Data.Extensions;
-using EvenCart.Infrastructure;
-using EvenCart.Infrastructure.Social;
+using Genesis;
+using Genesis.Extensions;
+using Genesis.Infrastructure.Mvc;
+using Genesis.Infrastructure.Mvc.Attributes;
+using Genesis.Modules.Users;
+using Genesis.Routing;
 using Microsoft.AspNetCore.Authentication;
 
 namespace Authentication.Google.Controllers
 {
     [Route("authentication")]
     [PluginType(PluginType = typeof(GoogleAuthPlugin))]
-    public class GoogleController : FoundationPluginController
+    public class GoogleController : GenesisPluginController
     {
         private readonly IConnectionAccountant _connectionAccountant;
         public GoogleController(IConnectionAccountant connectionAccountant)
@@ -28,7 +27,7 @@ namespace Authentication.Google.Controllers
             var returnUrl = WebHelper.GetReferrerUrl();
             var authenticationProperties = new AuthenticationProperties
             {
-                RedirectUri = ApplicationEngine.RouteUrl(GoogleConfig.GoogleRedirectUrl, new { returnUrl })
+                RedirectUri = GenesisEngine.Instance.RouteUrl(GoogleConfig.GoogleRedirectUrl, new { returnUrl })
             };
             return Challenge(authenticationProperties,  GoogleConfig.GoogleAuthenticationScheme);
         }
@@ -37,7 +36,7 @@ namespace Authentication.Google.Controllers
         public async Task<IActionResult> HandleRedirect(string returnUrl)
         {
             if (returnUrl.IsNullEmptyOrWhiteSpace())
-                returnUrl = ApplicationEngine.RouteUrl(RouteNames.Home);
+                returnUrl = GenesisEngine.Instance.RouteUrl(RouteNames.Home);
             var request = await GoogleHelper.CreateConnectedAccountRequestAsync();
             if (_connectionAccountant.Connect(request))
                 return Redirect(returnUrl);

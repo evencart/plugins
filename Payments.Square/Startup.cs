@@ -1,5 +1,5 @@
-﻿using EvenCart.Core.Startup;
-using EvenCart.Infrastructure;
+﻿using Genesis;
+using Genesis.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,7 +14,7 @@ namespace Payments.Square
         public void Configure(IApplicationBuilder app)
         {
             //ignore the webhook url from antiforgery validation
-            ApplicationConfig.IgnoreAntiforgeryValidation("/square/webhook");
+            GenesisEngine.Instance.IgnoreAntiforgeryValidation("/square/webhook");
         }
 
         public int Priority { get; }

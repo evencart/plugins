@@ -1,10 +1,10 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
-using EvenCart.Infrastructure.Mvc.Validator;
-using FluentValidation;
+﻿using FluentValidation;
+using Genesis.Infrastructure.Mvc.Models;
+using Genesis.Infrastructure.Mvc.Validator;
 
 namespace Ui.SearchPlus.Models.Administration
 {
-    public class SearchPlusSettingsModel : FoundationModel, IRequiresValidations<SearchPlusSettingsModel>
+    public class SearchPlusSettingsModel : GenesisModel, IRequiresValidations<SearchPlusSettingsModel>
     {
         public int NumberOfAutoCompleteResults { get; set; }
 

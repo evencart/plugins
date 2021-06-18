@@ -1,4 +1,4 @@
-﻿using EvenCart.Infrastructure.Mvc.Models;
+﻿using Genesis.Infrastructure.Mvc.Models;
 
 namespace Ui.SearchPlus.Models.Administration
 {

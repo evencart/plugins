@@ -1,9 +1,9 @@
-﻿using EvenCart.Core.Services;
+﻿using Genesis.Services;
 using Ui.SearchPlus.Data;
 
 namespace Ui.SearchPlus.Services
 {
-    public interface ISearchTermService : IFoundationEntityService<SearchTerm>
+    public interface ISearchTermService : IGenesisEntityService<SearchTerm>
     {
         
     }
